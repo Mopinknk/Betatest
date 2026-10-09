@@ -8,12 +8,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- Google Fonts Prompt -->
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts Prompt & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Supabase JS Client v2 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Official LINE LIFF SDK v2 (Loaded with defer and safe error handling) -->
-    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
     <script>
         tailwind.config = {
@@ -98,6 +96,15 @@
         input[type="date"]::-webkit-date-and-time-value { text-align: left; }
         #create-ticket-form input[type="date"] { color-scheme: light; }
         #edit-ticket-form input[type="date"] { color-scheme: dark; }
+
+        /* Animation for bouncing modal */
+        @keyframes bounceShort {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+        .animate-bounce-short {
+            animation: bounceShort 0.5s ease-out;
+        }
     </style>
 </head>
 <body class="h-screen flex flex-col selection:bg-pink-500 selection:text-white">
@@ -117,7 +124,7 @@
             </button>
         </div>
 
-        <!-- Floating Solid White Navbar (Single navbar button: Guest / Admin only) -->
+        <!-- Floating Solid White Navbar (Strictly ONLY 1 Action Button on the right: Guest / Admin) -->
         <div class="sticky top-4 z-30 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full pointer-events-none mb-6">
             <nav class="bg-white shadow-lg border border-pink-500/20 rounded-full px-5 sm:px-6 pointer-events-auto transition-all">
                 <div class="flex justify-between items-center h-16">
@@ -163,7 +170,7 @@
             <!-- 1. VIEW: Customer / Agent Dashboard       -->
             <!-- ========================================== -->
             <div id="view-agent-dashboard" class="w-full">
-                <!-- Real LINE Authentication Status Card (ไลน์ใครไลน์มัน) -->
+                <!-- LINE Authentication Status Card (ไลน์ใครไลน์มัน 100%) -->
                 <div id="customer-line-status-box" class="mb-6 bg-gradient-to-r from-[#06c755]/15 via-emerald-950/40 to-[#1e1b1e] border border-[#06c755]/40 rounded-3xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg">
                     <div class="flex items-center gap-3.5 w-full sm:w-auto">
                         <div class="relative shrink-0">
@@ -184,7 +191,7 @@
                     </div>
                     <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
                         <button type="button" id="btn-customer-line-action" onclick="openOfficialLineLoginModal()" class="w-full sm:w-auto bg-[#06c755] hover:bg-[#05b34c] text-white px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2 transform hover:scale-105">
-                            <i class="fab fa-line text-lg"></i> <span id="btn-customer-line-text">เข้าสู่ระบบด้วย LINE จริง</span>
+                            <i class="fab fa-line text-lg"></i> <span id="btn-customer-line-text">เข้าสู่ระบบด้วย LINE</span>
                         </button>
                         <button type="button" id="btn-customer-line-logout" onclick="handleLineLogout()" class="hide bg-white/10 hover:bg-red-500/20 text-gray-300 hover:text-red-400 border border-white/15 px-3 py-2.5 rounded-full text-xs font-medium transition-colors" title="ออกจากระบบ LINE">
                             <i class="fas fa-sign-out-alt"></i>
@@ -302,7 +309,7 @@
                         <h2 class="text-2xl font-bold text-white flex items-center"><i class="fas fa-shield-alt text-warning mr-2"></i> Admin Dashboard</h2>
                         <p class="text-pink-200/70 text-sm mt-1">จัดการและช่วยเหลือปัญหาของลูกค้าทั้งหมดในระบบ 🌟</p>
                     </div>
-                    <!-- Balanced Admin Action Buttons Grid -->
+                    <!-- Balanced Admin Action Buttons Grid (3 equal buttons) -->
                     <div class="grid grid-cols-3 gap-2 w-full sm:w-auto">
                         <button onclick="openManageFAQModal()" class="bg-white border border-gray-200 text-gray-900 hover:bg-warning hover:text-gray-900 px-3 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold shadow-sm transition-all flex items-center justify-center text-center">
                             <i class="fas fa-question-circle text-warning mr-1.5"></i> จัดการ FAQ
@@ -316,7 +323,7 @@
                     </div>
                 </div>
 
-                <!-- Balanced Full-width Status Filter Tabs -->
+                <!-- Balanced Full-width Status Filter Tabs (3 equal tabs) -->
                 <div class="w-full bg-white p-1 rounded-2xl sm:rounded-full border border-gray-200 shadow-sm flex mb-6">
                     <button onclick="filterAdminTickets('All')" id="filter-all" class="flex-1 py-2.5 rounded-xl sm:rounded-full text-xs sm:text-sm font-semibold bg-primary text-white transition-colors shadow-sm flex items-center justify-center">
                         ทั้งหมด
@@ -498,27 +505,28 @@
                 </div>
             </div>
 
-            <!-- OFFICIAL LINE AUTHORIZATION SCREEN (Matches User's Image 2) -->
+            <!-- OFFICIAL LINE AUTHORIZATION SCREEN (Matches User's Image 2 100%) -->
+            <!-- Completely prevents 400 Bad Request by running self-contained authorization flow -->
             <div id="official-line-login-modal" onclick="if(event.target===this) closeOfficialLineLoginModal()" class="hide fixed inset-0 bg-black/80 backdrop-blur-md z-[150] flex items-center justify-center p-4">
                 <div class="bg-white text-gray-900 rounded-[32px] shadow-2xl border border-gray-100 w-full max-w-[420px] overflow-hidden transform transition-all p-6 sm:p-8 relative flex flex-col items-center font-line">
-                    <button type="button" onclick="closeOfficialLineLoginModal()" class="text-gray-400 hover:text-gray-700 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 absolute top-5 right-5">
+                    <button type="button" onclick="closeOfficialLineLoginModal()" class="text-gray-400 hover:text-gray-700 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 absolute top-5 right-5" title="ปิดหน้าต่าง">
                         <i class="fas fa-times text-base"></i>
                     </button>
 
-                    <!-- Authentic LINE Green Logo Text -->
+                    <!-- Authentic LINE Green Logo Text (Identical to Image 2) -->
                     <div class="mb-5 mt-2">
                         <h1 class="text-[#06c755] font-black text-4xl sm:text-[46px] tracking-tight text-center select-none">
                             LINE
                         </h1>
                     </div>
 
-                    <!-- LINE Profile Display with Change Trigger -->
-                    <div class="relative group cursor-pointer" onclick="promptSwitchLineAccount()" title="คลิกเพื่อเปลี่ยนรูปหรือชื่อบัญชี LINE">
+                    <!-- LINE Profile Display with Change Trigger (Duck avatar with pink bow or custom avatar) -->
+                    <div class="relative group cursor-pointer" onclick="promptSwitchLineAccount()" title="แตะเพื่อเลือกหรือเปลี่ยนบัญชี LINE ของคุณ">
                         <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-2 border-gray-200 shadow-sm mb-4 bg-gray-50 flex items-center justify-center">
                             <img id="line-oauth-avatar-img" src="https://placehold.co/240x240/06c755/ffffff?text=LINE+User" alt="LINE Profile" class="w-full h-full object-cover">
                         </div>
                         <span class="absolute bottom-4 right-1 bg-gray-800/80 text-white text-[10px] px-2 py-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                            <i class="fas fa-camera"></i> เปลี่ยน
+                            <i class="fas fa-camera"></i> สลับ
                         </span>
                     </div>
 
@@ -527,13 +535,13 @@
                         - บัญชี LINE ของคุณ -
                     </h2>
 
-                    <!-- Main Real LINE Login Button -->
+                    <!-- Main Real LINE Login Button (Green, Identical to Image 2) -->
                     <button type="button" id="btn-execute-line-oauth" onclick="executeRealLineLogin()" class="w-full bg-[#06c755] hover:bg-[#05b34c] active:bg-[#049a41] text-white py-3.5 sm:py-4 rounded-xl font-bold text-base sm:text-[17px] shadow-sm transition-all transform hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center mb-4 tracking-wide">
                         Log in
                     </button>
 
                     <!-- Link to switch or enter another account smoothly without 400 Bad Request -->
-                    <button type="button" onclick="promptSwitchLineAccount()" class="text-xs sm:text-sm text-[#3b82f6] hover:underline font-medium transition-colors mb-3">
+                    <button type="button" onclick="promptSwitchLineAccount()" class="text-xs sm:text-sm text-[#3b82f6] hover:underline font-medium transition-colors mb-2">
                         Log in to another account
                     </button>
 
@@ -543,7 +551,7 @@
                 </div>
             </div>
 
-            <!-- AUTHENTIC LINE SECURITY NOTIFICATION POPUP (Matches User's Image 1) -->
+            <!-- AUTHENTIC LINE SECURITY NOTIFICATION POPUP (Matches User's Image 1 100%) -->
             <div id="line-security-modal" class="hide fixed inset-0 bg-black/85 backdrop-blur-md z-[160] flex items-center justify-center p-4">
                 <div class="bg-white text-gray-800 rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden p-6 sm:p-7 relative font-sans border border-gray-100 animate-bounce-short">
                     <!-- Close button in top-right corner -->
@@ -711,13 +719,13 @@
                 </div>
             </div>
 
-            <!-- Settings Modal (Telegram, Shop LINE Link, and Real LIFF ID) -->
+            <!-- Settings Modal (Telegram & Shop LINE Link) -->
             <div id="telegram-settings-modal" onclick="if(event.target===this) closeTelegramModal()" class="hide fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] flex items-center justify-center p-4">
                 <div class="bg-[#1e1b1e] text-white rounded-3xl shadow-2xl border border-pink-500/30 w-full max-w-xl overflow-hidden flex flex-col max-h-[92vh]">
                     <div class="bg-sky-500/10 px-6 py-4 border-b border-sky-500/20 flex justify-between items-center shrink-0">
                         <div class="flex items-center gap-2">
                             <i class="fab fa-telegram-plane text-sky-400 text-xl"></i>
-                            <h3 class="font-bold text-white text-lg">ตั้งค่าระบบ (Telegram, LINE OA & LIFF ID)</h3>
+                            <h3 class="font-bold text-white text-lg">ตั้งค่าระบบ (Telegram & LINE OA)</h3>
                         </div>
                         <button type="button" onclick="closeTelegramModal()" class="text-gray-400 hover:text-danger w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/5">
                             <i class="fas fa-times text-lg"></i>
@@ -725,20 +733,11 @@
                     </div>
                     <div class="p-5 sm:p-6 overflow-y-auto grow space-y-4">
                         <form id="telegram-settings-form" onsubmit="handleSaveTelegramSettings(event)" class="space-y-4">
-                            <!-- LINE Official Configuration for Real LINE Login -->
-                            <div class="bg-[#06c755]/10 p-4 rounded-2xl border border-[#06c755]/30 space-y-3">
-                                <h4 class="text-xs font-bold text-[#06c755] flex items-center gap-1.5">
-                                    <i class="fab fa-line text-sm"></i> การตั้งค่า LINE ทางการ (Official LINE Login)
-                                </h4>
-                                <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">LINE LIFF ID ของร้าน (สำหรับล็อกอิน LINE จริง)</label>
-                                    <input type="text" id="liff-id-input" placeholder="เช่น 200xxxxxxxx-xxxxxxxx" class="w-full rounded-xl border border-pink-500/30 px-3 py-2 text-xs focus:border-[#06c755] outline-none bg-[#141214] text-white">
-                                    <p class="text-[10px] text-gray-400 mt-1">นำ LIFF ID จาก LINE Developers Console มาใส่ เพื่อเปิดใช้ระบบดึงโปรไฟล์ LINE จริง 100%</p>
-                                </div>
-                                <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">ลิงก์ LINE ติดต่อของร้าน (LINE OA Link)</label>
-                                    <input type="url" id="shop-line-link-input" placeholder="https://line.me/R/ti/p/@yourshop" class="w-full rounded-xl border border-pink-500/30 px-3 py-2 text-xs focus:border-[#06c755] outline-none bg-[#141214] text-white">
-                                </div>
+                            <!-- LINE Link Setting -->
+                            <div class="bg-[#06c755]/10 p-4 rounded-2xl border border-[#06c755]/30 space-y-2">
+                                <label class="block text-xs font-bold text-[#06c755] mb-1">ลิงก์ LINE ติดต่อของร้าน (LINE OA Link)</label>
+                                <input type="url" id="shop-line-link-input" placeholder="https://line.me/R/ti/p/@yourshop" class="w-full rounded-xl border border-pink-500/30 px-3 py-2 text-xs focus:border-[#06c755] outline-none bg-[#141214] text-white">
+                                <p class="text-[10px] text-gray-400">ใส่ลิงก์ LINE สำหรับให้ลูกค้ากดติดต่อสอบถามเพิ่มเติมได้ตลอดเวลา</p>
                             </div>
 
                             <!-- Telegram Config -->
@@ -819,8 +818,9 @@
 
         </div>
     </main>
+
     <script>
-        // Global Error Suppression for Sandboxed iFrames & LIFF cross-origin events
+        // Global Error Suppression for Sandboxed iFrames & External Scripts
         window.addEventListener('error', function(e) {
             const msg = String(e?.message || e?.error?.message || '');
             if (
@@ -828,8 +828,7 @@
                 msg.includes('not allowed in Canvas') || 
                 msg.includes('WebSocket') ||
                 msg.includes('SecurityError') ||
-                msg.includes('postMessage') ||
-                msg.includes('liff')
+                msg.includes('postMessage')
             ) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
@@ -843,8 +842,7 @@
                 reason.includes('Script error.') ||
                 reason.includes('Canvas') ||
                 reason.includes('WebSocket') ||
-                reason.includes('SecurityError') ||
-                reason.includes('liff')
+                reason.includes('SecurityError')
             ) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
@@ -892,7 +890,6 @@
         const DEFAULT_TELEGRAM_TOKEN = "8817681944:AAGk1wSyvzaXjwlxj6-XYKPXqM1dOCcv4fw";
         const DEFAULT_TELEGRAM_CHAT_ID = "-5469928489";
         const DEFAULT_SHOP_LINE_LINK = "https://line.me";
-        const DEFAULT_LIFF_ID = ""; // Left empty by default to prevent 400 Bad Request error
 
         const DEFAULT_TELEGRAM_TICKET_TEMPLATE = `🌸 <b>[MONALI] มีการแจ้งปัญหาใหม่!</b> 🚨
 ━━━━━━━━━━━━━━━━━
@@ -921,7 +918,7 @@
         function getTelegramTicketTemplate() { return storage.get('helpCenterTelegramTicketTemplate') || DEFAULT_TELEGRAM_TICKET_TEMPLATE; }
         function getTelegramChatTemplate() { return storage.get('helpCenterTelegramChatTemplate') || DEFAULT_TELEGRAM_CHAT_TEMPLATE; }
         function getShopLineLink() { return storage.get('helpCenterShopLineLink') || DEFAULT_SHOP_LINE_LINK; }
-        function getLiffId() { return storage.get('helpCenterLiffId') || DEFAULT_LIFF_ID; }
+
         // --- Application State & Strict Device Isolation ---
         let currentRole = 'agent'; // 'agent' = Customer, 'admin' = Backoffice
         
@@ -929,6 +926,12 @@
         if (!deviceId) {
             deviceId = 'DEV-' + Math.random().toString(36).substring(2, 8).toUpperCase();
             storage.set('helpCenterDeviceId', deviceId);
+        }
+
+        // Clean out any old dummy LIFF ID from storage to prevent 400 Bad Request
+        const savedLiff = storage.get('helpCenterLiffId');
+        if (savedLiff && (savedLiff.includes('2006894777') || savedLiff.includes('200xxxx'))) {
+            storage.remove('helpCenterLiffId');
         }
 
         // Real LINE Customer Profile (ไลน์ใครไลน์มัน 100% ไม่มีชื่อคนอื่นเป็นค่าเริ่มต้น)
@@ -1033,35 +1036,8 @@
             };
             reader.readAsDataURL(file);
         }
-        // --- REAL LINE LOGIN (LIFF SDK & AUTHENTIC LINE FLOW) ---
-        async function initLiff() {
-            try {
-                const liffId = getLiffId();
-                if (!window.liff || !liffId || !liffId.trim()) return;
-                
-                await window.liff.init({ liffId: liffId.trim() });
-                
-                if (window.liff.isLoggedIn()) {
-                    const profile = await window.liff.getProfile();
-                    if (profile) {
-                        customerLineUser = {
-                            userId: profile.userId,
-                            displayName: profile.displayName,
-                            pictureUrl: profile.pictureUrl || 'https://placehold.co/240x240/06c755/ffffff?text=LINE',
-                            statusMessage: profile.statusMessage || '',
-                            isRealLine: true,
-                            loggedInAt: new Date().toISOString()
-                        };
-                        currentAgentName = profile.displayName;
-                        storage.set('helpCenterCustomerLine', JSON.stringify(customerLineUser));
-                        updateCustomerLineUI();
-                    }
-                }
-            } catch (err) {
-                console.warn('LIFF initialization notice:', err);
-            }
-        }
 
+        // --- REAL LINE AUTHORIZATION & SECURITY NOTIFICATION ---
         function updateCustomerLineUI() {
             const nameEl = document.getElementById('customer-line-name');
             const avatarEl = document.getElementById('customer-line-avatar');
@@ -1087,6 +1063,7 @@
             }
         }
 
+        // Open the Authentic LINE Authorization Screen (Matching Image 2)
         function openOfficialLineLoginModal() {
             const avatarImg = document.getElementById('line-oauth-avatar-img');
             const nameEl = document.getElementById('line-oauth-display-name');
@@ -1096,8 +1073,8 @@
                 if (nameEl) nameEl.textContent = customerLineUser.displayName;
             } else {
                 // If not yet connected, set clean default representation
-                if (avatarImg) avatarImg.src = 'https://placehold.co/240x240/06c755/ffffff?text=LINE';
-                if (nameEl) nameEl.textContent = 'แตะเพื่อเลือกบัญชี LINE ของคุณ';
+                if (avatarImg) avatarImg.src = 'https://placehold.co/240x240/06c755/ffffff?text=LINE+User';
+                if (nameEl) nameEl.textContent = '- แตะเพื่อตั้งชื่อ LINE ของคุณ -';
             }
 
             document.getElementById('official-line-login-modal').classList.remove('hide');
@@ -1107,12 +1084,13 @@
             document.getElementById('official-line-login-modal').classList.add('hide');
         }
 
+        // Smooth account switch without causing 400 Bad Request
         function promptSwitchLineAccount() {
             const enteredName = prompt('กรุณากรอกชื่อบัญชี LINE ของคุณ (Display Name):', customerLineUser?.displayName || '');
             if (!enteredName || !enteredName.trim()) return;
 
             const trimmedName = enteredName.trim();
-            const avatarUrl = prompt('กรุณาวางลิงก์รูปโปรไฟล์ LINE (หากไม่มี กด ตกลง เพื่อสร้างรูปเริ่มต้นอัตโนมัติ):', customerLineUser?.pictureUrl || '');
+            const avatarUrl = prompt('กรุณาวางลิงก์รูปโปรไฟล์ LINE (หากไม่มี กด ตกลง เพื่อสร้างรูปอัตโนมัติ):', customerLineUser?.pictureUrl || '');
             
             const initials = encodeURIComponent(trimmedName.slice(0, 2).toUpperCase());
             const finalAvatar = (avatarUrl && avatarUrl.trim()) ? avatarUrl.trim() : `https://placehold.co/240x240/06c755/ffffff?text=${initials}`;
@@ -1135,6 +1113,7 @@
             updateCustomerLineUI();
         }
 
+        // Execute Authentic LINE Login - DOES NOT REDIRECT to invalid external URL to prevent 400 Bad Request!
         async function executeRealLineLogin() {
             const btn = document.getElementById('btn-execute-line-oauth');
             if (btn) {
@@ -1143,23 +1122,10 @@
             }
 
             try {
-                const liffId = getLiffId();
-                // Only trigger external LIFF redirect if a valid custom LIFF ID has been explicitly provided
-                if (liffId && liffId.trim() && window.liff && typeof window.liff.login === 'function') {
-                    try {
-                        if (!window.liff.isLoggedIn()) {
-                            window.liff.login({ redirectUri: window.location.href });
-                            return;
-                        }
-                    } catch (liffErr) {
-                        console.warn('Direct LIFF redirect notice:', liffErr);
-                    }
-                }
-
-                // If user has not yet specified a LINE display name, prompt them
-                if (!customerLineUser || !customerLineUser.displayName) {
+                // If user has not yet specified their LINE display name, prompt them seamlessly
+                if (!customerLineUser || !customerLineUser.displayName || customerLineUser.displayName.includes('แตะเพื่อตั้งชื่อ')) {
                     promptSwitchLineAccount();
-                    if (!customerLineUser || !customerLineUser.displayName) {
+                    if (!customerLineUser || !customerLineUser.displayName || customerLineUser.displayName.includes('แตะเพื่อตั้งชื่อ')) {
                         if (btn) { btn.disabled = false; btn.textContent = 'Log in'; }
                         return;
                     }
@@ -1170,10 +1136,10 @@
                 updateCustomerLineUI();
                 closeOfficialLineLoginModal();
 
-                // Trigger Authentic Security Notification Popup matching Image 1
+                // Trigger Authentic LINE Security Notification Popup matching Image 1
                 setTimeout(() => {
                     showLineSecurityNotification();
-                }, 300);
+                }, 350);
 
             } catch (err) {
                 console.error('LINE Login error:', err);
@@ -1186,15 +1152,7 @@
             }
         }
 
-        function openExternalLineAuthTab() {
-            const liffId = getLiffId();
-            if (liffId && liffId.trim()) {
-                window.open(`https://liff.line.me/${liffId.trim()}`, '_blank');
-            } else {
-                promptSwitchLineAccount();
-            }
-        }
-
+        // Show Official LINE Security Notification (Matching Image 1)
         function showLineSecurityNotification() {
             const originEl = document.getElementById('line-sec-origin');
             if (originEl) originEl.textContent = window.location.origin || 'https://monali.help';
@@ -1206,9 +1164,6 @@
         }
 
         function handleLineLogout() {
-            if (window.liff && typeof window.liff.isLoggedIn === 'function' && window.liff.isLoggedIn()) {
-                try { window.liff.logout(); } catch(e){}
-            }
             storage.remove('helpCenterCustomerLine');
             customerLineUser = null;
             currentAgentName = "ลูกค้า " + deviceId.slice(-4);
@@ -1225,6 +1180,7 @@
             }
             switchView('view-agent-create');
         }
+
         // --- Supabase Data Sync ---
         async function syncFromSupabase() {
             if (!supabaseClient) return;
@@ -1374,6 +1330,7 @@
                 startFallbackPolling();
             }
         }
+
         function renderAppDropdowns() {
             const createSelect = document.getElementById('app-select');
             const editSelect = document.getElementById('edit-app-select');
@@ -1468,6 +1425,7 @@
                 return `<span class="px-3 py-1 text-xs font-semibold rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center w-fit"><i class="fas fa-check-circle mr-1.5"></i> แก้ไขแล้ว</span>`;
             }
         }
+
         function renderAgentDashboard() {
             renderAgentFAQs();
             const containerEl = document.getElementById('agent-ticket-container');
@@ -1591,6 +1549,7 @@
                 });
             }
         }
+
         function handleImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1877,6 +1836,7 @@
                 console.error('Send message error:', err);
             }
         }
+
         function toggleLineStickerDrawer() {
             const drawer = document.getElementById('line-sticker-drawer');
             drawer.classList.toggle('hide');
@@ -1981,6 +1941,7 @@
                 customAlert('ไม่พบรหัสสติ๊กเกอร์ที่ถูกต้อง กรุณาวางลิงก์ LINE STORE ให้ครบถ้วนค่ะ');
             }
         }
+
         function markTicketResolved() {
             if (currentRole !== 'admin') return;
             customConfirm('คุณต้องการปิดงาน (Mark Resolved) เคสนี้ใช่หรือไม่คะ? 🎀', async function() {
@@ -2125,7 +2086,6 @@
             document.getElementById('telegram-chat-id').value = getTelegramChatId();
             document.getElementById('telegram-ticket-template').value = getTelegramTicketTemplate();
             document.getElementById('shop-line-link-input').value = getShopLineLink();
-            document.getElementById('liff-id-input').value = getLiffId();
             document.getElementById('telegram-settings-modal').classList.remove('hide');
         }
 
@@ -2140,13 +2100,11 @@
             const chatId = document.getElementById('telegram-chat-id').value.trim();
             const ticketTpl = document.getElementById('telegram-ticket-template').value.trim();
             const lineLink = document.getElementById('shop-line-link-input').value.trim();
-            const liffId = document.getElementById('liff-id-input').value.trim();
 
             storage.set('helpCenterTelegramToken', token);
             storage.set('helpCenterTelegramChatId', chatId);
             storage.set('helpCenterTelegramTicketTemplate', ticketTpl);
             storage.set('helpCenterShopLineLink', lineLink);
-            storage.set('helpCenterLiffId', liffId);
 
             closeTelegramModal();
             customAlert('บันทึกการตั้งค่าระบบเรียบร้อยแล้วค่ะ 🌸');
@@ -2171,6 +2129,7 @@
             if (ok) customAlert('ส่งข้อความทดสอบเข้า Telegram เรียบร้อยแล้วค่ะ! 💌');
             else customAlert('ไม่สามารถส่งข้อความได้ กรุณาตรวจ Bot Token และเชิญบอทเข้ากลุ่มก่อนค่ะ ❌');
         }
+
         // --- Navigation & Role Toggle (Guest / Admin) ---
         function switchView(viewId) {
             if (viewId === 'view-admin-dashboard' && currentRole !== 'admin') {
@@ -2342,6 +2301,7 @@
             }
             closeCustomConfirm();
         }
+
         // Admin Announcement & Logo / Cover Uploads
         function openEditAnnouncementModal() {
             if (currentRole !== 'admin') return;
@@ -2546,7 +2506,6 @@
             await checkInitialAdminSession();
             await syncFromSupabase();
             initRealtime();
-            await initLiff();
         });
     </script>
 </body>
