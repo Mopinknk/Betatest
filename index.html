@@ -10,7 +10,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Google Fonts Prompt -->
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- LINE LIFF SDK (Official LINE Front-end Framework) -->
+    <!-- Official LINE Front-end Framework (LIFF SDK v2) -->
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <!-- Supabase JS Client v2 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -117,6 +117,7 @@
 <body class="h-screen flex flex-col selection:bg-pink-500 selection:text-white">
 
     <main class="flex-grow overflow-y-auto w-full relative">
+        <!-- Scrolling Announcement Marquee Bar -->
         <div class="w-full bg-primary/20 border-b border-pink-500/30 overflow-hidden py-1.5 mb-2 relative group">
             <div class="whitespace-nowrap overflow-hidden">
                 <div id="marquee-text-display" class="animate-marquee text-xs sm:text-sm text-pink-200 font-medium flex items-center gap-8">
@@ -130,7 +131,7 @@
             </button>
         </div>
 
-        <!-- Floating Navbar with single Guest / Admin button -->
+        <!-- Floating Navbar with SINGLE BUTTON (Guest / Admin) -->
         <div class="sticky top-4 z-30 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full pointer-events-none mb-6">
             <nav class="bg-white shadow-lg border border-pink-500/20 rounded-full px-5 sm:px-6 pointer-events-auto transition-all">
                 <div class="flex justify-between items-center h-16">
@@ -147,7 +148,7 @@
                             <span class="text-[10px] sm:text-[11px] text-pink-600 mt-1 font-medium tracking-wide">- ระบบแจ้งปัญหา -</span>
                         </div>
                     </div>
-                    <!-- SINGLE NAVBAR BUTTON: Guest / Admin login button only -->
+                    <!-- SINGLE NAVBAR BUTTON: Guest / Admin only -->
                     <div class="flex items-center">
                         <button id="btn-role-toggle" onclick="handleRoleToggleClick()" class="flex items-center px-4 sm:px-5 py-2 text-xs sm:text-sm font-semibold rounded-2xl bg-pink-50 text-primary border border-pink-200 shadow-sm hover:shadow-md transition-all group">
                             <i id="role-toggle-icon" class="fas fa-user mr-2 group-hover:scale-110 transition-transform"></i>
@@ -171,6 +172,7 @@
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 w-full h-full relative">
 
+            <!-- 1. Customer Agent View -->
             <div id="view-agent-dashboard" class="w-full">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 gap-4">
                     <div>
@@ -182,26 +184,26 @@
                     </button>
                 </div>
 
-                <!-- Customer Real LINE Connection Prompt Banner -->
-                <div id="agent-line-banner" class="mb-5 bg-gradient-to-r from-[#06c755]/20 via-[#1e1b1e] to-pink-500/20 border border-[#06c755]/30 rounded-3xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md">
+                <!-- Real LINE Authorization Banner -->
+                <div id="agent-line-banner" class="mb-5 bg-gradient-to-r from-[#06c755]/20 via-[#1e1b1e] to-pink-500/20 border border-[#06c755]/40 rounded-3xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md">
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-2xl bg-[#06c755] text-white flex items-center justify-center text-2xl shrink-0 shadow-sm relative overflow-hidden" id="line-banner-avatar-box">
+                        <div class="w-12 h-12 rounded-2xl bg-[#06c755] text-white flex items-center justify-center text-2xl shrink-0 shadow-md relative overflow-hidden" id="line-banner-avatar-box">
                             <i class="fab fa-line" id="line-banner-icon"></i>
                             <img id="line-banner-avatar-img" src="" alt="LINE Avatar" class="hide w-full h-full object-cover">
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
-                                <h3 id="line-banner-title" class="font-bold text-white text-sm sm:text-base">เข้าสู่ระบบด้วย LINE เพื่อเชื่อมต่อข้อมูลและสติ๊กเกอร์ 💚</h3>
+                                <h3 id="line-banner-title" class="font-bold text-white text-sm sm:text-base">เข้าสู่ระบบด้วย LINE (ขอรับสิทธิ์อย่างเป็นทางการ) 💚</h3>
                                 <span id="line-status-pill" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#06c755]/20 text-[#06c755] border border-[#06c755]/30 flex items-center gap-1">
-                                    <i class="fab fa-line"></i> LINE Login
+                                    <i class="fab fa-line"></i> LINE Official
                                 </span>
                             </div>
-                            <p id="line-banner-desc" class="text-xs text-gray-300 mt-0.5">ล็อกอินผ่านบัญชี LINE ของคุณโดยตรงเพื่อดึงโปรไฟล์และสติ๊กเกอร์ของตนเองมาใช้งานในระบบ</p>
+                            <p id="line-banner-desc" class="text-xs text-gray-300 mt-0.5">กดเพื่อเปิดหน้าอนุญาตสิทธิ์จาก LINE โดยตรง ดึงโปรไฟล์และสติ๊กเกอร์ของคุณมาใช้งานในระบบ</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2 self-end sm:self-auto">
                         <button id="btn-banner-line-action" onclick="triggerRealLineLogin()" class="bg-[#06c755] hover:bg-[#05b34c] text-white text-xs font-semibold px-5 py-2.5 rounded-full shadow-md transition-all transform hover:scale-105 whitespace-nowrap flex items-center gap-2 shrink-0">
-                            <i class="fab fa-line text-base"></i> <span id="btn-banner-line-text">เข้าสู่ระบบด้วย LINE</span>
+                            <i class="fab fa-line text-base"></i> <span id="btn-banner-line-text">อนุญาตและเข้าสู่ระบบด้วย LINE</span>
                         </button>
                     </div>
                 </div>
@@ -226,6 +228,7 @@
                 </div>
             </div>
 
+            <!-- 2. Customer Create Ticket View -->
             <div id="view-agent-create" class="hide w-full max-w-2xl mx-auto">
                 <button onclick="goBackFromAgentCreate()" class="text-pink-300 hover:text-white mb-4 flex items-center transition-colors w-fit bg-[#1e1b1e] px-4 py-2 rounded-full shadow-sm border border-pink-500/20 text-xs sm:text-sm">
                     <i class="fas fa-arrow-left mr-2"></i> ย้อนกลับ
@@ -286,6 +289,7 @@
                 </div>
             </div>
 
+            <!-- 3. Admin Backoffice View -->
             <div id="view-admin-dashboard" class="hide w-full">
                 <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-4">
                     <div>
@@ -309,7 +313,7 @@
                                 <i class="fab fa-line text-[#06c755] mr-1.5"></i> บัญชี LINE
                             </button>
                         </div>
-                        <!-- Balanced Status Filters (Equal-width tabs) -->
+                        <!-- Status Filters (Equal-width tabs) -->
                         <div class="flex bg-white p-1 rounded-2xl border border-gray-200 shadow-sm w-full sm:w-80">
                             <button onclick="filterAdminTickets('All')" id="filter-all" class="flex-1 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-primary text-white transition-all text-center">ทั้งหมด</button>
                             <button onclick="filterAdminTickets('Open')" id="filter-open" class="flex-1 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-transparent text-gray-700 hover:bg-gray-100 transition-all flex items-center justify-center"><span class="w-2 h-2 rounded-full bg-warning mr-1.5"></span> รอดำเนินการ</button>
@@ -354,6 +358,7 @@
                 </div>
             </div>
 
+            <!-- 4. Ticket Detail / Chat View -->
             <div id="view-ticket-detail" class="hide w-full max-w-4xl mx-auto flex flex-col h-full pb-4">
                 <button onclick="goBackFromDetail()" class="text-pink-300 hover:text-white mb-4 flex items-center transition-colors w-fit bg-[#1e1b1e] px-4 py-2 rounded-full shadow-sm border border-pink-500/20 text-xs sm:text-sm">
                     <i class="fas fa-arrow-left mr-2"></i> ย้อนกลับ
@@ -475,6 +480,7 @@
                 </div>
             </div>
 
+            <!-- Admin Login Modal -->
             <div id="admin-login-modal" onclick="if(event.target===this) closeAdminLoginModal()" class="hide fixed inset-0 bg-black/70 backdrop-blur-sm z-[120] flex items-center justify-center p-4">
                 <div class="bg-[#1e1b1e] text-white rounded-3xl shadow-2xl border border-pink-500/30 w-full max-w-md overflow-hidden transform transition-all p-6 md:p-8 relative">
                     <button type="button" onclick="closeAdminLoginModal()" class="text-gray-400 hover:text-danger transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/5 absolute top-5 right-5">
@@ -505,6 +511,7 @@
                 </div>
             </div>
 
+            <!-- Real Official LINE Login Authorization Modal (OAuth 2.1 & LIFF) -->
             <div id="real-line-login-modal" onclick="if(event.target===this) closeRealLineLoginModal()" class="hide fixed inset-0 bg-black/75 backdrop-blur-sm z-[120] flex items-center justify-center p-4">
                 <div class="bg-[#1e1b1e] text-white rounded-3xl shadow-2xl border border-[#06c755]/40 w-full max-w-md overflow-hidden transform transition-all p-6 md:p-8 relative">
                     <button type="button" onclick="closeRealLineLoginModal()" class="text-gray-400 hover:text-danger transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/5 absolute top-5 right-5">
@@ -514,33 +521,34 @@
                         <div class="w-16 h-16 bg-[#06c755] text-white rounded-3xl flex items-center justify-center text-3xl mx-auto mb-3 shadow-lg shadow-[#06c755]/30">
                             <i class="fab fa-line"></i>
                         </div>
-                        <h3 class="font-bold text-white text-xl">เข้าสู่ระบบด้วย LINE (LINE Login)</h3>
-                        <p class="text-xs text-gray-300 mt-1">เชื่อมต่อบัญชี LINE เพื่อดึงข้อมูลโปรไฟล์และสติ๊กเกอร์ของคุณอัตโนมัติ</p>
+                        <h3 class="font-bold text-white text-xl">อนุญาตสิทธิ์ผ่าน LINE (LINE Login)</h3>
+                        <p class="text-xs text-gray-300 mt-1">ระบบจะนำท่านไปยังหน้ายืนยันสิทธิ์ทางการของ LINE</p>
                     </div>
 
                     <div class="space-y-4">
                         <div class="bg-[#141214] p-4 rounded-2xl border border-[#06c755]/20 text-xs text-gray-300 space-y-2">
                             <div class="flex items-center gap-2 text-white font-semibold">
-                                <i class="fas fa-shield-alt text-[#06c755]"></i> สิทธิ์ที่ขอเข้าถึง:
+                                <i class="fas fa-shield-alt text-[#06c755]"></i> สิทธิ์ที่ขออนุญาตจากบัญชี LINE ของคุณ:
                             </div>
                             <p class="flex items-center gap-2"><i class="fas fa-check text-[#06c755] text-[10px]"></i> ชื่อโปรไฟล์ใน LINE (Display Name)</p>
-                            <p class="flex items-center gap-2"><i class="fas fa-check text-[#06c755] text-[10px]"></i> รูปโปรไฟล์ LINE (Profile Picture)</p>
-                            <p class="flex items-center gap-2"><i class="fas fa-check text-[#06c755] text-[10px]"></i> รหัสผู้ใช้ LINE (LINE User ID) สำหรับติดตามเคส</p>
+                            <p class="flex items-center gap-2"><i class="fas fa-check text-[#06c755] text-[10px]"></i> รูปโปรไฟล์จริงจาก LINE (Profile Picture)</p>
+                            <p class="flex items-center gap-2"><i class="fas fa-check text-[#06c755] text-[10px]"></i> รหัสผู้ใช้ LINE (LINE User ID) เพื่อติดตามเคสส่วนตัว</p>
                         </div>
 
-                        <!-- 1-Click Real LINE Login Action Button -->
+                        <!-- 1-Click Redirect to Real LINE Authorization -->
                         <button type="button" id="btn-do-line-login" onclick="executeLineAuth()" class="w-full bg-[#06c755] hover:bg-[#05b34c] text-white py-3.5 rounded-full font-bold shadow-lg shadow-[#06c755]/25 transition-transform transform hover:scale-105 text-sm flex items-center justify-center gap-2">
-                            <i class="fab fa-line text-xl"></i> เข้าสู่ระบบด้วย LINE ทันที
+                            <i class="fab fa-line text-xl"></i> ยืนยันอนุญาตสิทธิ์ผ่าน LINE ตอนนี้
                         </button>
 
                         <div class="pt-2 border-t border-pink-500/15">
                             <button type="button" onclick="toggleLiffConfigBox()" class="text-[11px] text-gray-400 hover:text-pink-300 flex items-center gap-1 mx-auto transition-colors">
-                                <i class="fas fa-cog"></i> ตั้งค่า LIFF ID ของร้านค้า (สำหรับแอดมิน)
+                                <i class="fas fa-cog"></i> ตั้งค่า LINE LIFF ID ของร้านค้า
                             </button>
                             <div id="liff-config-box" class="hide mt-3 p-3 bg-[#141214] rounded-2xl border border-pink-500/20 text-xs">
                                 <label class="block text-gray-300 font-semibold mb-1">LINE LIFF ID</label>
+                                <p class="text-[10px] text-gray-400 mb-2">สามารถสร้างได้ฟรีที่ <a href="https://developers.line.biz" target="_blank" class="text-[#06c755] underline">line.biz</a> เพื่อให้ผู้ใช้เด้งไปหน้าขออนุญาตสิทธิ์ของ LINE ทันที</p>
                                 <div class="flex gap-2">
-                                    <input type="text" id="liff-id-input" placeholder="ใส่ LIFF ID จาก LINE Developers..." class="flex-grow rounded-xl border border-pink-500/30 px-3 py-2 text-xs bg-[#1e1b1e] text-white outline-none">
+                                    <input type="text" id="liff-id-input" placeholder="เช่น 200xxxxxxx-xxxxxxx" class="flex-grow rounded-xl border border-pink-500/30 px-3 py-2 text-xs bg-[#1e1b1e] text-white outline-none">
                                     <button type="button" onclick="saveLiffId()" class="bg-[#06c755] text-white px-3 py-2 rounded-xl font-bold shrink-0">บันทึก</button>
                                 </div>
                             </div>
@@ -549,6 +557,7 @@
                 </div>
             </div>
 
+            <!-- Admin LINE Profile Modal inside Dashboard -->
             <div id="admin-line-modal" onclick="if(event.target===this) closeAdminLineModal()" class="hide fixed inset-0 bg-black/70 backdrop-blur-sm z-[120] flex items-center justify-center p-4">
                 <div class="bg-[#1e1b1e] text-white rounded-3xl shadow-2xl border border-[#06c755]/30 w-full max-w-md overflow-hidden transform transition-all p-6 md:p-8 relative">
                     <button type="button" onclick="closeAdminLineModal()" class="text-gray-400 hover:text-danger transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/5 absolute top-5 right-5">
@@ -580,6 +589,7 @@
                 </div>
             </div>
 
+            <!-- Edit Announcement Modal -->
             <div id="edit-announcement-modal" onclick="if(event.target===this) closeEditAnnouncementModal()" class="hide fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] flex items-center justify-center p-4">
                 <div class="bg-[#1e1b1e] text-white rounded-3xl shadow-2xl border border-pink-500/30 w-full max-w-lg overflow-hidden transform transition-all p-6 md:p-8 relative">
                     <button type="button" onclick="closeEditAnnouncementModal()" class="text-gray-400 hover:text-danger transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/5 absolute top-5 right-5">
@@ -605,6 +615,7 @@
                 </div>
             </div>
 
+            <!-- Edit Ticket Modal (Admin) -->
             <div id="edit-ticket-modal" onclick="if(event.target===this) closeEditModal()" class="hide fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                 <div class="bg-[#1e1b1e] text-white rounded-3xl shadow-2xl border border-pink-500/30 w-full max-w-lg overflow-hidden transform transition-all">
                     <div class="bg-pink-500/10 px-6 py-4 border-b border-pink-500/20 flex justify-between items-center">
@@ -651,6 +662,7 @@
                 </div>
             </div>
 
+            <!-- Manage Apps Modal -->
             <div id="manage-apps-modal" onclick="if(event.target===this) closeManageAppsModal()" class="hide fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                 <div class="bg-[#1e1b1e] text-white rounded-3xl shadow-2xl border border-pink-500/30 w-full max-w-md overflow-hidden transform transition-all flex flex-col max-h-[80vh]">
                     <div class="bg-pink-500/10 px-6 py-4 border-b border-pink-500/20 flex justify-between items-center shrink-0">
@@ -673,6 +685,7 @@
                 </div>
             </div>
 
+            <!-- Manage FAQ Modal (Admin) -->
             <div id="manage-faq-modal" onclick="if(event.target===this) closeManageFAQModal()" class="hide fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                 <div class="bg-[#1e1b1e] text-white rounded-3xl shadow-2xl border border-pink-500/30 w-full max-w-2xl overflow-hidden transform transition-all flex flex-col max-h-[90vh]">
                     <div class="bg-warning/10 px-6 py-4 border-b border-warning/20 flex justify-between items-center shrink-0">
@@ -721,51 +734,7 @@
                 </div>
             </div>
 
-            <div id="edit-faq-modal" onclick="if(event.target===this) closeEditFAQModal()" class="hide fixed inset-0 bg-black/60 backdrop-blur-sm z-[115] flex items-center justify-center p-4">
-                <div class="bg-[#1e1b1e] text-white rounded-3xl shadow-2xl border border-warning/30 w-full max-w-lg overflow-hidden transform transition-all flex flex-col max-h-[90vh]">
-                    <div class="bg-warning/10 px-6 py-4 border-b border-warning/20 flex justify-between items-center shrink-0">
-                        <h3 class="font-bold text-white text-lg"><i class="fas fa-edit text-warning mr-2"></i> แก้ไขคำถามที่พบบ่อย (FAQ)</h3>
-                        <button type="button" onclick="closeEditFAQModal()" class="text-gray-400 hover:text-danger transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/5">
-                            <i class="fas fa-times text-lg"></i>
-                        </button>
-                    </div>
-                    <form id="edit-faq-form" onsubmit="handleEditFAQ(event)" class="p-6 space-y-4 overflow-y-auto grow">
-                        <input type="hidden" id="edit-faq-index">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-300 mb-1.5">คำถาม</label>
-                            <input type="text" id="edit-faq-question" required placeholder="คำถาม..." class="w-full rounded-xl border border-pink-500/30 px-4 py-3 focus:border-warning focus:ring-warning outline-none text-sm bg-[#141214] text-white">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-300 mb-1.5">คำตอบและวิธีแก้ไขเบื้องต้น</label>
-                            <textarea id="edit-faq-answer" required rows="4" placeholder="คำตอบ..." class="w-full rounded-xl border border-pink-500/30 px-4 py-3 focus:border-warning focus:ring-warning outline-none text-sm resize-none bg-[#141214] text-white"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-300 mb-1.5">รูปภาพตัวอย่างประกอบคำแนะนำ (ไม่บังคับ)</label>
-                            <div class="flex items-center gap-3">
-                                <label class="cursor-pointer bg-[#141214] text-warning border border-warning/30 hover:bg-warning/10 px-4 py-2 rounded-full transition-colors text-xs font-medium shadow-sm flex items-center">
-                                    <i class="fas fa-image mr-1.5"></i> เลือกรูปภาพใหม่
-                                    <input type="file" id="edit-faq-file-upload" accept="image/*" class="hidden" onchange="handleEditFaqImageUpload(event)">
-                                </label>
-                                <span class="text-[11px] text-gray-400">(ขนาดไม่เกิน 5MB)</span>
-                            </div>
-                            <input type="hidden" id="edit-faq-image">
-                            <div id="edit-faq-image-preview-container" class="hide mt-3 relative inline-block">
-                                <img id="edit-faq-image-preview" src="" alt="FAQ Preview" class="max-h-36 rounded-xl border border-warning/30 shadow-sm">
-                                <button type="button" onclick="removeEditFaqImage()" class="absolute -top-2.5 -right-2.5 bg-danger text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-500 shadow-md">
-                                    <i class="fas fa-times text-xs"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="pt-4 flex justify-end gap-3">
-                            <button type="button" onclick="closeEditFAQModal()" class="px-5 py-2.5 bg-[#141214] border border-pink-500/20 rounded-full text-gray-300 hover:bg-white/5 transition-colors font-medium text-sm">ยกเลิก</button>
-                            <button type="submit" id="btn-save-edit-faq" class="bg-warning text-gray-900 px-6 py-2.5 rounded-full hover:bg-amber-400 shadow-sm transition-transform transform hover:scale-105 text-sm font-semibold flex items-center">
-                                <i class="fas fa-save mr-2"></i> <span id="btn-save-edit-faq-text">บันทึกการแก้ไข</span>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
+            <!-- Telegram Settings Modal (Admin) -->
             <div id="telegram-settings-modal" onclick="if(event.target===this) closeTelegramModal()" class="hide fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] flex items-center justify-center p-4">
                 <div class="bg-[#1e1b1e] text-white rounded-3xl shadow-2xl border border-pink-500/30 w-full max-w-xl overflow-hidden transform transition-all flex flex-col max-h-[92vh]">
                     <div class="bg-sky-500/10 px-6 py-4 border-b border-sky-500/20 flex justify-between items-center shrink-0">
@@ -820,6 +789,7 @@
                 </div>
             </div>
 
+            <!-- View FAQ Modal -->
             <div id="view-faq-modal" onclick="if(event.target===this) closeViewFAQModal()" class="hide fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
                 <div class="bg-white text-gray-800 rounded-3xl shadow-2xl border border-pink-200 w-full max-w-lg overflow-hidden transform transition-all relative max-h-[90vh] flex flex-col">
                     <div class="bg-pink-50 px-6 py-5 border-b border-pink-100 flex justify-between items-center shrink-0">
@@ -984,6 +954,7 @@
         let viewingTicketId = null;
         let currentFilter = 'All';
 
+        // --- Official LINE LIFF Initialization & OAuth Detection ---
         async function initLiff() {
             const liffId = getLiffId();
             if (!window.liff || !liffId) return;
@@ -1006,13 +977,14 @@
                     }
                 }
             } catch (err) {
-                console.warn('LIFF init notice:', err);
+                console.warn('LIFF init status:', err);
             }
         }
 
+        // Trigger Real LINE Login Action
         function triggerRealLineLogin() {
             if (customerLineUser && customerLineUser.isRealLine) {
-                customConfirm(`คุณเข้าสู่ระบบด้วย LINE: ${customerLineUser.displayName} อยู่แล้วค่ะ\nต้องการสลับหรือออกจากระบบ LINE หรือไม่คะ? 💚`, function() {
+                customConfirm(`คุณได้รับอนุญาตและเข้าสู่ระบบด้วย LINE: ${customerLineUser.displayName} เรียบร้อยแล้วค่ะ 💚\nต้องการออกจากระบบเพื่อสลับบัญชี LINE หรือไม่คะ?`, function() {
                     if (window.liff && window.liff.isLoggedIn()) {
                         try { window.liff.logout(); } catch(e){}
                     }
@@ -1026,16 +998,17 @@
             }
 
             const liffId = getLiffId();
-            if (window.liff && liffId && typeof window.liff.login === 'function') {
+            // หากมี LIFF ID ตั้งไว้ ให้เปิดหน้าขออนุญาตสิทธิ์จาก LINE ตรงทันที
+            if (window.liff && liffId) {
                 try {
                     window.liff.login({ redirectUri: window.location.href });
                     return;
                 } catch(e) {
-                    console.warn('LIFF login redirect notice:', e);
+                    console.warn('LIFF login direct redirect notice:', e);
                 }
             }
 
-            // Open Real LINE Login Modal directly
+            // หากยังไม่ได้ใส่ LIFF ID ให้เปิด Modal แนะนำการเชื่อมต่ออย่างเป็นทางการ
             const inputLiff = document.getElementById('liff-id-input');
             if (inputLiff) inputLiff.value = getLiffId();
             document.getElementById('real-line-login-modal').classList.remove('hide');
@@ -1052,43 +1025,33 @@
 
         function saveLiffId() {
             const val = document.getElementById('liff-id-input').value.trim();
+            if (!val) {
+                customAlert('กรุณาระบุ LIFF ID จาก LINE Developers Console ก่อนนะคะ 💚');
+                return;
+            }
             localStorage.setItem('helpCenterLiffId', val);
-            customAlert('บันทึก LINE LIFF ID เรียบร้อยแล้วค่ะ 💚\nระบบจะเชื่อมต่อ LINE Login ของคุณทันที');
-            if (val) initLiff();
+            customAlert('บันทึก LINE LIFF ID เรียบร้อยแล้วค่ะ 💚\nระบบจะพาคุณไปยังหน้าขออนุญาตสิทธิ์ของ LINE ทันที');
+            initLiff().then(() => {
+                if (window.liff) window.liff.login({ redirectUri: window.location.href });
+            });
         }
 
         async function executeLineAuth() {
             const liffId = getLiffId();
             if (window.liff && liffId) {
                 try {
-                    if (!window.liff.isLoggedIn()) {
-                        window.liff.login({ redirectUri: window.location.href });
-                        return;
-                    }
-                } catch(e) {}
+                    // เปิดหน้าขออนุญาตสิทธิ์ทางการจาก LINE (LINE Consent Screen)
+                    window.liff.login({ redirectUri: window.location.href });
+                    return;
+                } catch(e) {
+                    console.error('LIFF Login failed:', e);
+                }
             }
 
-            // Seamless Real LINE Profile Link:
-            // หากเปิดผ่าน LINE Browser หรือไม่มี LIFF ID ตั้งไว้ ระบบจะจำลองและเชื่อมต่อโปรไฟล์ LINE อัตโนมัติทันที
-            const lineRandomId = 'U' + Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10);
-            const lineDefaultName = "LINE User " + deviceId.slice(-4);
-            const lineDefaultAvatar = "https://stickershop.line-scdn.net/stickershop/v1/sticker/1/android/sticker.png";
-
-            customerLineUser = {
-                userId: lineRandomId,
-                displayName: lineDefaultName,
-                pictureUrl: lineDefaultAvatar,
-                isRealLine: true,
-                updatedAt: new Date().toISOString()
-            };
-            try {
-                localStorage.setItem('helpCenterCustomerLine', JSON.stringify(customerLineUser));
-            } catch(e) {}
-            currentAgentName = customerLineUser.displayName;
-
-            closeRealLineLoginModal();
-            updateNavbarProfileUI();
-            customAlert(`เชื่อมต่อและเข้าสู่ระบบด้วย LINE สำเร็จแล้วค่ะ! 💚\nบัญชี: ${customerLineUser.displayName}\nพร้อมดึงสติ๊กเกอร์ของคุณได้ทันทีในห้องแชท`);
+            // กรณีเปิดในระบบพรีวิวและยังไม่ได้ใส่ LIFF ID ของร้านค้า
+            customConfirm(`ระบบกำลังจะพาคุณไปยังหน้าขออนุญาตสิทธิ์ของ LINE 💚\n\nหากคุณมี LINE LIFF ID ของร้านค้าแล้ว แนะนำให้กรอกในช่อง "ตั้งค่า LINE LIFF ID" ด้านล่าง เพื่อให้ระบบเปิดหน้ายินยอมสิทธิ์ทางการผ่าน LINE โดยตรงค่ะ\n\nต้องการเปิดหน้าตั้งค่า LIFF ID ตอนนี้เลยหรือไม่คะ?`, function() {
+                toggleLiffConfigBox();
+            });
         }
 
         function updateNavbarProfileUI() {
@@ -1121,7 +1084,7 @@
 
             if (customerLineUser && customerLineUser.isRealLine) {
                 if (bannerTitle) bannerTitle.textContent = `เชื่อมต่อกับ LINE: ${customerLineUser.displayName} 💚`;
-                if (bannerDesc) bannerDesc.textContent = `ล็อกอินผ่าน LINE สำเร็จแล้ว พร้อมใช้งานสติ๊กเกอร์และติดตามเคสตลอด 24 ชม.`;
+                if (bannerDesc) bannerDesc.textContent = `ยืนยันสิทธิ์ผ่าน LINE เรียบร้อย พร้อมใช้งานสติ๊กเกอร์และติดตามเคสตลอด 24 ชม.`;
                 if (bannerBtnText) bannerBtnText.textContent = `สลับ/ออกจากระบบ LINE`;
                 if (bannerAvatar) {
                     bannerAvatar.src = customerLineUser.pictureUrl;
@@ -1129,9 +1092,9 @@
                 }
                 if (bannerIcon) bannerIcon.classList.add('hide');
             } else {
-                if (bannerTitle) bannerTitle.textContent = `เข้าสู่ระบบด้วย LINE เพื่อเชื่อมต่อข้อมูลและสติ๊กเกอร์ 💚`;
-                if (bannerDesc) bannerDesc.textContent = `ล็อกอินผ่านบัญชี LINE ของคุณโดยตรงเพื่อดึงโปรไฟล์และสติ๊กเกอร์ของตนเองมาใช้งานในระบบ`;
-                if (bannerBtnText) bannerBtnText.textContent = `เข้าสู่ระบบด้วย LINE`;
+                if (bannerTitle) bannerTitle.textContent = `เข้าสู่ระบบด้วย LINE (ขอรับสิทธิ์อย่างเป็นทางการ) 💚`;
+                if (bannerDesc) bannerDesc.textContent = `กดเพื่อเปิดหน้าอนุญาตสิทธิ์จาก LINE โดยตรง ดึงโปรไฟล์และสติ๊กเกอร์ของคุณมาใช้งานในระบบ`;
+                if (bannerBtnText) bannerBtnText.textContent = `อนุญาตและเข้าสู่ระบบด้วย LINE`;
                 if (bannerAvatar) bannerAvatar.classList.add('hide');
                 if (bannerIcon) bannerIcon.classList.remove('hide');
             }
@@ -1451,7 +1414,6 @@
                 { id: '107', url: 'https://stickershop.line-scdn.net/stickershop/v1/sticker/107/android/sticker.png' }
             ],
             my: [
-                // สติ๊กเกอร์ยอดนิยมตั้งต้นในแท็บของฉัน
                 { id: '1988', url: 'https://stickershop.line-scdn.net/stickershop/v1/sticker/1988/android/sticker.png', name: 'Love' },
                 { id: '1989', url: 'https://stickershop.line-scdn.net/stickershop/v1/sticker/1989/android/sticker.png', name: 'OK' },
                 { id: '1990', url: 'https://stickershop.line-scdn.net/stickershop/v1/sticker/1990/android/sticker.png', name: 'Smile' },
@@ -1560,8 +1522,6 @@
             });
         }
 
-        // SMART LINE STICKER PACKAGE LINKER
-        // ดึงชุดสติ๊กเกอร์จากลิงก์ LINE STORE หรือ Package ID ของผู้ใช้โดยตรง
         function importUserLineStickerPackage() {
             const input = document.getElementById('my-line-sticker-input');
             const val = input.value.trim();
@@ -1583,12 +1543,9 @@
                 return;
             }
 
-            // ในระบบ LINE Sticker CDN แต่ละแพ็กเกจจะประกอบด้วย Sticker IDs ต่อเนื่องกัน
-            // ดึงสติ๊กเกอร์ตัวแทนของชุดเข้ามาในคอลเลกชัน "สติ๊กเกอร์ของฉัน"
             const baseStickerId = parseInt(extractedPackageId, 10);
             let addedCount = 0;
 
-            // เพิ่มสติ๊กเกอร์ 16 ชิ้นแรกของชุดนี้เข้าคลังสติ๊กเกอร์ของผู้ใช้
             for (let i = 0; i < 16; i++) {
                 const currentId = String(baseStickerId + i);
                 const currentUrl = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${currentId}/android/sticker.png`;
@@ -1910,7 +1867,6 @@
             const containerEl = document.getElementById('agent-ticket-container');
             const emptyEl = document.getElementById('agent-empty-state');
             
-            // STRICT DEVICE ISOLATION:
             const agentTickets = tickets.filter(t => t.deviceId === deviceId);
             containerEl.innerHTML = '';
             
@@ -2162,7 +2118,6 @@
                 return;
             }
 
-            // Strict Isolation check:
             if (currentRole !== 'admin' && ticket.deviceId !== deviceId) {
                 customAlert('คุณไม่มีสิทธิ์เข้าถึงข้อมูลของอุปกรณ์อื่นค่ะ 🔒');
                 goBackFromDetail();
@@ -2253,7 +2208,6 @@
                 } else if (isMe) {
                     msgWrapper.className += " justify-end";
                     if (isSticker && safeImgUrl) {
-                        // Floating Transparent LINE Sticker
                         msgWrapper.innerHTML = `
                             <div class="max-w-[80%] flex flex-col items-end">
                                 <span class="text-xs text-pink-300 mb-1 mr-2 font-medium">คุณ</span>
