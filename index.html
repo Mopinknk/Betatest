@@ -512,9 +512,14 @@
                         </h1>
                     </div>
 
-                    <!-- LINE Profile Display -->
-                    <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-2 border-gray-200 shadow-sm mb-4 relative bg-gray-50 flex items-center justify-center">
-                        <img id="line-oauth-avatar-img" src="https://placehold.co/240x240/06c755/ffffff?text=LINE+User" alt="LINE Profile" class="w-full h-full object-cover">
+                    <!-- LINE Profile Display with Change Trigger -->
+                    <div class="relative group cursor-pointer" onclick="promptSwitchLineAccount()" title="คลิกเพื่อเปลี่ยนรูปหรือชื่อบัญชี LINE">
+                        <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-2 border-gray-200 shadow-sm mb-4 bg-gray-50 flex items-center justify-center">
+                            <img id="line-oauth-avatar-img" src="https://placehold.co/240x240/06c755/ffffff?text=LINE+User" alt="LINE Profile" class="w-full h-full object-cover">
+                        </div>
+                        <span class="absolute bottom-4 right-1 bg-gray-800/80 text-white text-[10px] px-2 py-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                            <i class="fas fa-camera"></i> เปลี่ยน
+                        </span>
                     </div>
 
                     <p class="text-xs sm:text-sm text-gray-500 font-medium mb-1 tracking-wide">Continue as</p>
@@ -527,13 +532,13 @@
                         Log in
                     </button>
 
-                    <!-- Link to switch or open external auth -->
-                    <button type="button" onclick="openExternalLineAuthTab()" class="text-xs sm:text-sm text-[#3b82f6] hover:underline font-medium transition-colors mb-3">
+                    <!-- Link to switch or enter another account smoothly without 400 Bad Request -->
+                    <button type="button" onclick="promptSwitchLineAccount()" class="text-xs sm:text-sm text-[#3b82f6] hover:underline font-medium transition-colors mb-3">
                         Log in to another account
                     </button>
 
                     <div class="mt-4 pt-3 border-t border-gray-100 w-full text-center">
-                        <p class="text-[11px] text-gray-400">เชื่อมต่อระบบรับรองความปลอดภัยทางการของ LINE</p>
+                        <p class="text-[11px] text-gray-400">เข้าสู่ระบบเพื่อติดต่อและติดตามการแก้ไขปัญหา</p>
                     </div>
                 </div>
             </div>
@@ -541,6 +546,11 @@
             <!-- AUTHENTIC LINE SECURITY NOTIFICATION POPUP (Matches User's Image 1) -->
             <div id="line-security-modal" class="hide fixed inset-0 bg-black/85 backdrop-blur-md z-[160] flex items-center justify-center p-4">
                 <div class="bg-white text-gray-800 rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden p-6 sm:p-7 relative font-sans border border-gray-100 animate-bounce-short">
+                    <!-- Close button in top-right corner -->
+                    <button type="button" onclick="closeLineSecurityNotification()" class="text-gray-400 hover:text-gray-600 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 absolute top-4 right-4" title="ปิดหน้าต่าง">
+                        <i class="fas fa-times text-sm"></i>
+                    </button>
+
                     <div class="flex items-center gap-2 mb-3">
                         <div class="w-6 h-6 rounded-full bg-[#06c755] text-white flex items-center justify-center text-xs">
                             <i class="fab fa-line"></i>
@@ -563,13 +573,20 @@
                         <p>สถานที่: <span id="line-sec-loc" class="text-gray-900 font-semibold">Rayong Thailand</span></p>
                     </div>
 
-                    <button type="button" onclick="closeLineSecurityNotification()" class="w-full bg-[#06c755] hover:bg-[#05b34c] text-white py-3 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base shadow-sm transition-all mb-3 text-center">
-                        เข้าใจแล้ว
-                    </button>
-
-                    <button type="button" onclick="handleLineLogout(); closeLineSecurityNotification();" class="w-full text-center text-xs text-gray-500 hover:text-danger font-medium transition-colors">
+                    <!-- Green Log Out button matching Image 1 -->
+                    <button type="button" onclick="handleLineLogout(); closeLineSecurityNotification();" class="w-full bg-[#06c755] hover:bg-[#05b34c] text-white py-3 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base shadow-sm transition-all mb-3 text-center">
                         ออกจากระบบ
                     </button>
+
+                    <!-- Change Password / Dismiss Actions matching Image 1 -->
+                    <div class="flex items-center justify-between px-2 pt-1">
+                        <button type="button" onclick="customAlert('แนะนำให้เปลี่ยนรหัสผ่านในแอป LINE หากคุณไม่ได้เป็นผู้เข้าสู่ระบบค่ะ'); closeLineSecurityNotification();" class="text-xs text-gray-600 hover:text-gray-900 font-medium transition-colors">
+                            เปลี่ยนรหัสผ่าน
+                        </button>
+                        <button type="button" onclick="closeLineSecurityNotification()" class="text-xs text-emerald-600 hover:underline font-semibold transition-colors">
+                            เข้าใจแล้ว เข้าสู่หน้าบริการ ✓
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -805,12 +822,15 @@
     <script>
         // Global Error Suppression for Sandboxed iFrames & LIFF cross-origin events
         window.addEventListener('error', function(e) {
-            if (e && (
-                e.message?.includes('Script error.') || 
-                e.message?.includes('not allowed in Canvas') || 
-                e.message?.includes('postMessage') ||
-                e.message?.includes('liff')
-            )) {
+            const msg = String(e?.message || e?.error?.message || '');
+            if (
+                msg.includes('Script error.') || 
+                msg.includes('not allowed in Canvas') || 
+                msg.includes('WebSocket') ||
+                msg.includes('SecurityError') ||
+                msg.includes('postMessage') ||
+                msg.includes('liff')
+            ) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
                 return true;
@@ -818,12 +838,16 @@
         }, true);
 
         window.addEventListener('unhandledrejection', function(e) {
-            if (e && e.reason && (
-                String(e.reason).includes('Script error.') ||
-                String(e.reason).includes('Canvas') ||
-                String(e.reason).includes('liff')
-            )) {
+            const reason = String(e?.reason?.message || e?.reason || '');
+            if (
+                reason.includes('Script error.') ||
+                reason.includes('Canvas') ||
+                reason.includes('WebSocket') ||
+                reason.includes('SecurityError') ||
+                reason.includes('liff')
+            ) {
                 e.preventDefault();
+                e.stopImmediatePropagation();
             }
         });
 
@@ -868,7 +892,7 @@
         const DEFAULT_TELEGRAM_TOKEN = "8817681944:AAGk1wSyvzaXjwlxj6-XYKPXqM1dOCcv4fw";
         const DEFAULT_TELEGRAM_CHAT_ID = "-5469928489";
         const DEFAULT_SHOP_LINE_LINK = "https://line.me";
-        const DEFAULT_LIFF_ID = "2006894777-aB3kL9mX"; // Default placeholder if not set
+        const DEFAULT_LIFF_ID = ""; // Left empty by default to prevent 400 Bad Request error
 
         const DEFAULT_TELEGRAM_TICKET_TEMPLATE = `🌸 <b>[MONALI] มีการแจ้งปัญหาใหม่!</b> 🚨
 ━━━━━━━━━━━━━━━━━
@@ -1013,9 +1037,9 @@
         async function initLiff() {
             try {
                 const liffId = getLiffId();
-                if (!window.liff || !liffId) return;
+                if (!window.liff || !liffId || !liffId.trim()) return;
                 
-                await window.liff.init({ liffId: liffId });
+                await window.liff.init({ liffId: liffId.trim() });
                 
                 if (window.liff.isLoggedIn()) {
                     const profile = await window.liff.getProfile();
@@ -1049,7 +1073,7 @@
             if (customerLineUser && customerLineUser.displayName) {
                 if (nameEl) nameEl.textContent = customerLineUser.displayName;
                 if (avatarEl) avatarEl.src = sanitizeMediaUrl(customerLineUser.pictureUrl);
-                if (subtextEl) subtextEl.textContent = 'เชื่อมต่อบัญชี LINE จริงแล้ว พร้อมแจ้งปัญหา';
+                if (subtextEl) subtextEl.textContent = 'เชื่อมต่อบัญชี LINE เรียบร้อยแล้ว พร้อมส่งแจ้งปัญหา';
                 if (btnActionText) btnActionText.textContent = 'บัญชี LINE ของคุณ';
                 if (btnLogout) btnLogout.classList.remove('hide');
                 if (createSenderName) createSenderName.textContent = customerLineUser.displayName;
@@ -1057,7 +1081,7 @@
                 if (nameEl) nameEl.textContent = 'ยังไม่ได้เชื่อมต่อ LINE';
                 if (avatarEl) avatarEl.src = 'https://placehold.co/120x120/06c755/ffffff?text=LINE';
                 if (subtextEl) subtextEl.textContent = 'เข้าสู่ระบบด้วย LINE เพื่อส่งเรื่องและติดตามสถานะ';
-                if (btnActionText) btnActionText.textContent = 'เข้าสู่ระบบด้วย LINE จริง';
+                if (btnActionText) btnActionText.textContent = 'เข้าสู่ระบบด้วย LINE';
                 if (btnLogout) btnLogout.classList.add('hide');
                 if (createSenderName) createSenderName.textContent = 'ลูกค้า ' + deviceId.slice(-4);
             }
@@ -1071,8 +1095,9 @@
                 if (avatarImg) avatarImg.src = sanitizeMediaUrl(customerLineUser.pictureUrl);
                 if (nameEl) nameEl.textContent = customerLineUser.displayName;
             } else {
-                if (avatarImg) avatarImg.src = 'https://placehold.co/240x240/06c755/ffffff?text=LINE+User';
-                if (nameEl) nameEl.textContent = '- บัญชี LINE ของคุณ -';
+                // If not yet connected, set clean default representation
+                if (avatarImg) avatarImg.src = 'https://placehold.co/240x240/06c755/ffffff?text=LINE';
+                if (nameEl) nameEl.textContent = 'แตะเพื่อเลือกบัญชี LINE ของคุณ';
             }
 
             document.getElementById('official-line-login-modal').classList.remove('hide');
@@ -1082,40 +1107,62 @@
             document.getElementById('official-line-login-modal').classList.add('hide');
         }
 
+        function promptSwitchLineAccount() {
+            const enteredName = prompt('กรุณากรอกชื่อบัญชี LINE ของคุณ (Display Name):', customerLineUser?.displayName || '');
+            if (!enteredName || !enteredName.trim()) return;
+
+            const trimmedName = enteredName.trim();
+            const avatarUrl = prompt('กรุณาวางลิงก์รูปโปรไฟล์ LINE (หากไม่มี กด ตกลง เพื่อสร้างรูปเริ่มต้นอัตโนมัติ):', customerLineUser?.pictureUrl || '');
+            
+            const initials = encodeURIComponent(trimmedName.slice(0, 2).toUpperCase());
+            const finalAvatar = (avatarUrl && avatarUrl.trim()) ? avatarUrl.trim() : `https://placehold.co/240x240/06c755/ffffff?text=${initials}`;
+
+            customerLineUser = {
+                userId: 'LINE-' + Math.random().toString(36).substring(2, 10).toUpperCase(),
+                displayName: trimmedName,
+                pictureUrl: finalAvatar,
+                isRealLine: true,
+                loggedInAt: new Date().toISOString()
+            };
+
+            const avatarImg = document.getElementById('line-oauth-avatar-img');
+            const nameEl = document.getElementById('line-oauth-display-name');
+            if (avatarImg) avatarImg.src = sanitizeMediaUrl(customerLineUser.pictureUrl);
+            if (nameEl) nameEl.textContent = customerLineUser.displayName;
+
+            currentAgentName = customerLineUser.displayName;
+            storage.set('helpCenterCustomerLine', JSON.stringify(customerLineUser));
+            updateCustomerLineUI();
+        }
+
         async function executeRealLineLogin() {
             const btn = document.getElementById('btn-execute-line-oauth');
             if (btn) {
                 btn.disabled = true;
-                btn.textContent = 'Connecting LINE...';
+                btn.textContent = 'Logging in...';
             }
 
             try {
-                // If LIFF is available and configured
-                if (window.liff && typeof window.liff.login === 'function' && getLiffId()) {
+                const liffId = getLiffId();
+                // Only trigger external LIFF redirect if a valid custom LIFF ID has been explicitly provided
+                if (liffId && liffId.trim() && window.liff && typeof window.liff.login === 'function') {
                     try {
                         if (!window.liff.isLoggedIn()) {
                             window.liff.login({ redirectUri: window.location.href });
                             return;
                         }
-                    } catch(liffErr) {
-                        console.warn('Direct LIFF redirect error:', liffErr);
+                    } catch (liffErr) {
+                        console.warn('Direct LIFF redirect notice:', liffErr);
                     }
                 }
 
-                // If not already set, prompt user or establish their own independent account
-                if (!customerLineUser) {
-                    const enteredName = prompt('กรุณากรอกชื่อแสดงผลบัญชี LINE ของคุณ (Display Name):', '');
-                    if (!enteredName || !enteredName.trim()) {
+                // If user has not yet specified a LINE display name, prompt them
+                if (!customerLineUser || !customerLineUser.displayName) {
+                    promptSwitchLineAccount();
+                    if (!customerLineUser || !customerLineUser.displayName) {
                         if (btn) { btn.disabled = false; btn.textContent = 'Log in'; }
                         return;
                     }
-                    customerLineUser = {
-                        userId: 'LINE-' + Math.random().toString(36).substring(2, 10).toUpperCase(),
-                        displayName: enteredName.trim(),
-                        pictureUrl: `https://placehold.co/240x240/06c755/ffffff?text=${encodeURIComponent(enteredName.slice(0, 2).toUpperCase())}`,
-                        isRealLine: true,
-                        loggedInAt: new Date().toISOString()
-                    };
                 }
 
                 currentAgentName = customerLineUser.displayName;
@@ -1123,7 +1170,7 @@
                 updateCustomerLineUI();
                 closeOfficialLineLoginModal();
 
-                // Trigger Authentic Security Notification (Image 1)
+                // Trigger Authentic Security Notification Popup matching Image 1
                 setTimeout(() => {
                     showLineSecurityNotification();
                 }, 300);
@@ -1141,11 +1188,10 @@
 
         function openExternalLineAuthTab() {
             const liffId = getLiffId();
-            if (liffId && liffId !== DEFAULT_LIFF_ID) {
-                window.open(`https://liff.line.me/${liffId}`, '_blank');
+            if (liffId && liffId.trim()) {
+                window.open(`https://liff.line.me/${liffId.trim()}`, '_blank');
             } else {
-                const externalAuthUrl = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=2006894777&redirect_uri=${encodeURIComponent(window.location.href)}&state=monali&scope=profile%20openid`;
-                window.open(externalAuthUrl, '_blank');
+                promptSwitchLineAccount();
             }
         }
 
@@ -1280,8 +1326,34 @@
             }
         }
 
+        let pollingTimer = null;
+        function startFallbackPolling() {
+            if (pollingTimer) return;
+            pollingTimer = setInterval(() => {
+                syncFromSupabase();
+            }, 3000);
+        }
+
+        function isCanvasOrSandbox() {
+            try {
+                if (window.location.hostname.includes('usercontent.goog')) return true;
+                if (window.self !== window.top) return true;
+            } catch (e) {
+                return true;
+            }
+            return false;
+        }
+
         function initRealtime() {
             if (!supabaseClient) return;
+
+            // In Canvas preview, WebSockets are restricted by sandbox policy.
+            // Use safe polling instead to prevent SecurityError.
+            if (isCanvasOrSandbox()) {
+                startFallbackPolling();
+                return;
+            }
+
             try {
                 supabaseClient.channel('monali-channel')
                     .on('postgres_changes', { event: '*', schema: 'public', table: 'tickets' }, () => syncFromSupabase())
@@ -1292,9 +1364,14 @@
                     .on('postgres_changes', { event: '*', schema: 'public', table: 'shop_settings' }, () => syncFromSupabase())
                     .on('postgres_changes', { event: '*', schema: 'public', table: 'faqs' }, () => syncFromSupabase())
                     .on('postgres_changes', { event: '*', schema: 'public', table: 'applications' }, () => syncFromSupabase())
-                    .subscribe();
+                    .subscribe((status) => {
+                        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+                            startFallbackPolling();
+                        }
+                    });
             } catch (e) {
                 console.warn('Realtime fallback:', e);
+                startFallbackPolling();
             }
         }
         function renderAppDropdowns() {
