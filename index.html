@@ -1694,6 +1694,7 @@ async function loadData() {
     const savedTheme = stMap['store_theme'] || 'pink';
     
     document.getElementById('storeNameMain').textContent = storeNameMain;
+    document.title = "ระบบจัดการหลังบ้าน " + storeNameMain;
     document.getElementById('storeNameSub').textContent = storeNameSub;
     applyTheme(savedTheme);
     
@@ -3778,7 +3779,7 @@ function saveStoreSettings(e) {
   saveSettingsValue('show_banner', showBanner);
   
   document.getElementById('storeNameMain').textContent = mainName || 'MONALI';
-  document.title = mainName || 'MONALI';
+  document.title = "ระบบจัดการหลังบ้าน " + (mainName || 'MONALI');
   document.getElementById('storeNameSub').textContent = subName || '- ระบบจัดการหลังร้าน -';
   
   const bannerContainer = document.getElementById('bannerContainer');
