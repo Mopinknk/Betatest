@@ -3778,6 +3778,7 @@ function saveStoreSettings(e) {
   saveSettingsValue('show_banner', showBanner);
   
   document.getElementById('storeNameMain').textContent = mainName || 'MONALI';
+  document.title = mainName || 'MONALI';
   document.getElementById('storeNameSub').textContent = subName || '- ระบบจัดการหลังร้าน -';
   
   const bannerContainer = document.getElementById('bannerContainer');
