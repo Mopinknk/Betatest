@@ -53,10 +53,10 @@ tailwind.config = {
         }
       },
       boxShadow: {
-        'cute': '0 4px 14px 0 rgba(212, 131, 157, 0.4)',
-        'soft': '0 2px 10px 0 rgba(62, 39, 35, 0.08)',
-        'glass': '0 8px 32px 0 rgba(62, 39, 35, 0.08)',
-        'glow': '0 0 20px 5px rgba(248, 177, 200, 0.5)'
+        'cute': '0 4px 14px 0 rgba(0, 0, 0, 0.12)',
+        'soft': '0 2px 10px 0 rgba(0, 0, 0, 0.08)',
+        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.08)',
+        'glow': '0 0 20px 5px rgba(0, 0, 0, 0.1)'
       }
     }
   }
@@ -123,7 +123,7 @@ main { position: relative; z-index: 10; }
   background-color: #ffffff;
   background-image: repeating-linear-gradient(-45deg, rgba(62, 39, 35, 0.04) 0, rgba(62, 39, 35, 0.04) 2px, transparent 2px, transparent 8px);
   position: relative;
-  filter: drop-shadow(0 4px 6px rgba(212, 131, 157, 0.12));
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.08));
   height: 30px;
   width: 90px;
   margin: 0 auto;
@@ -160,7 +160,7 @@ main { position: relative; z-index: 10; }
   pointer-events: none;
   z-index: 99999;
   will-change: transform, opacity;
-  text-shadow: 0 0 4px rgba(248, 177, 200, 0.8);
+  text-shadow: 0 0 4px var(--c-petal-deep);
   opacity: 0;
 }
 .animate-pop {
