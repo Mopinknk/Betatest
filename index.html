@@ -1308,34 +1308,75 @@ input[type="date"]::-webkit-date-and-time-value {
           <span class="text-[10px] text-espresso/60 font-medium">สำหรับรายการเดินบัญชี</span>
         </div>
       </button>
+      
+      <button onclick="closeSystemSettingsModal(); openChangeAdminPassModal();" class="w-full relative overflow-hidden group p-4 rounded-[1.25rem] bg-white border-2 border-petal text-espresso hover:bg-petal-light/60 transition-all flex items-center shadow-sm hover:shadow-md text-left hover:-translate-y-0.5">
+        <div class="absolute inset-0 opacity-[0.04]" style="background-image: repeating-linear-gradient(-45deg, currentColor 0, currentColor 2px, transparent 2px, transparent 8px);"></div>
+        <div class="w-12 h-12 rounded-full bg-petal flex items-center justify-center text-espresso mr-4 shrink-0 relative z-10 group-hover:scale-110 transition-transform shadow-inner">
+           <i class="fa-solid fa-lock text-lg"></i>
+        </div>
+        <div class="relative z-10 flex flex-col">
+          <span class="text-sm font-bold text-espresso w-full">เปลี่ยนรหัสผ่านเว็บไซต์</span>
+          <span class="text-[10px] text-espresso/60 font-medium">สำหรับเข้าสู่ระบบแอดมิน</span>
+        </div>
+      </button>
     </div>
   </div>
 </div>
-
-<div id="viewLicenseModal" class="fixed inset-0 bg-espresso/60 z-[80] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-  <div class="bg-white rounded-[2rem] w-full max-w-sm shadow-2xl transform scale-95 transition-transform duration-300 modal-content overflow-hidden p-6 border-2 border-petal text-center">
-    <div class="flex justify-between items-center mb-4">
-      <h3 class="text-xl font-bold text-espresso">⏳ ตรวจสอบวันใช้งาน</h3>
-      <button onclick="closeViewLicenseModal()" class="text-espresso/50 hover:text-espresso w-8 h-8 flex items-center justify-center rounded-full hover:bg-white transition-colors">
+<div id="changePinModal" class="fixed inset-0 bg-espresso/60 z-[75] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+  <div class="bg-white rounded-[2rem] w-full max-w-sm shadow-2xl transform scale-95 transition-transform duration-300 modal-content overflow-hidden p-6 border-2 border-petal">
+    <div class="flex justify-between items-center mb-5">
+      <h3 class="text-xl font-bold text-espresso flex items-center gap-2"><i class="fa-solid fa-key text-petal-deep"></i> เปลี่ยนรหัส PIN บัญชี</h3>
+      <button onclick="closeChangePinModal()" class="text-espresso/50 hover:text-espresso w-8 h-8 flex items-center justify-center rounded-full hover:bg-white transition-colors">
         <i class="fa-solid fa-xmark text-lg"></i>
       </button>
     </div>
-    <div class="space-y-4">
-      <div class="w-20 h-20 bg-petal-light border-2 border-petal rounded-full flex items-center justify-center mx-auto mb-2 text-espresso text-3xl shadow-inner">
-        <i class="fa-regular fa-calendar-check"></i>
+    <form onsubmit="handleSaveCustomPin(event)" class="space-y-4">
+      <div>
+        <label class="block text-xs font-bold text-espresso mb-1.5">รหัส PIN ปัจจุบัน</label>
+        <input type="password" id="currentPinInput" required class="w-full rounded-2xl border-petal bg-white px-4 py-3.5 text-center tracking-[0.5em] font-bold text-espresso border-2 focus:border-petal-deep focus:ring-0 transition-colors" placeholder="••••">
       </div>
       <div>
-        <p class="text-sm text-espresso/70 font-bold mb-1">วันหมดอายุของเว็บไซต์</p>
-        <p id="viewLicenseDateDisplay" class="text-lg font-black text-espresso">กำลังโหลด...</p>
+        <label class="block text-xs font-bold text-espresso mb-1.5">รหัส PIN ใหม่</label>
+        <input type="password" id="newPinInput" required class="w-full rounded-2xl border-petal bg-white px-4 py-3.5 text-center tracking-[0.5em] font-bold text-espresso border-2 focus:border-petal-deep focus:ring-0 transition-colors" placeholder="••••">
       </div>
-      <div class="bg-petal-light/50 p-4 rounded-2xl border border-petal shadow-sm">
-        <p class="text-xs text-espresso/70 font-bold mb-1">เวลาคงเหลือโดยประมาณ</p>
-        <p id="viewLicenseDaysLeft" class="text-2xl font-black text-petal-deep">-</p>
+      <div>
+        <label class="block text-xs font-bold text-espresso mb-1.5">ยืนยันรหัส PIN ใหม่</label>
+        <input type="password" id="confirmNewPinInput" required class="w-full rounded-2xl border-petal bg-white px-4 py-3.5 text-center tracking-[0.5em] font-bold text-espresso border-2 focus:border-petal-deep focus:ring-0 transition-colors" placeholder="••••">
       </div>
-      <div class="pt-2">
-        <button type="button" onclick="closeViewLicenseModal()" class="w-full py-3.5 rounded-2xl text-sm font-bold text-espresso bg-petal border-2 border-transparent hover:bg-petal-deep transition-colors shadow-cute">ตกลง</button>
+      <div class="pt-2 flex gap-2">
+        <button type="button" onclick="closeChangePinModal()" class="flex-1 py-3.5 rounded-2xl text-sm font-bold text-espresso bg-white border border-petal hover:bg-petal-light transition-colors">ยกเลิก</button>
+        <button type="submit" id="btnSavePin" class="flex-1 py-3.5 rounded-2xl text-sm font-bold text-espresso bg-petal border-2 border-transparent hover:bg-petal-deep transition-colors shadow-cute">บันทึกรหัส</button>
       </div>
+    </form>
+  </div>
+</div>
+
+<div id="changeAdminPassModal" class="fixed inset-0 bg-espresso/60 z-[75] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+  <div class="bg-white rounded-[2rem] w-full max-w-sm shadow-2xl transform scale-95 transition-transform duration-300 modal-content overflow-hidden p-6 border-2 border-petal">
+    <div class="flex justify-between items-center mb-5">
+      <h3 class="text-xl font-bold text-espresso flex items-center gap-2"><i class="fa-solid fa-lock text-petal-deep"></i> เปลี่ยนรหัสผ่านเว็บ</h3>
+      <button onclick="closeChangeAdminPassModal()" class="text-espresso/50 hover:text-espresso w-8 h-8 flex items-center justify-center rounded-full hover:bg-white transition-colors">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
     </div>
+    <form onsubmit="handleSaveAdminPass(event)" class="space-y-4">
+      <div>
+        <label class="block text-xs font-bold text-espresso mb-1.5">รหัสผ่านปัจจุบัน</label>
+        <input type="password" id="currentAdminPassInput" required class="w-full rounded-2xl border-petal bg-white px-4 py-3 text-center tracking-widest font-bold text-espresso border-2 focus:border-petal-deep focus:ring-0 transition-colors" placeholder="••••">
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-espresso mb-1.5">รหัสผ่านใหม่</label>
+        <input type="password" id="newAdminPassInput" required class="w-full rounded-2xl border-petal bg-white px-4 py-3 text-center tracking-widest font-bold text-espresso border-2 focus:border-petal-deep focus:ring-0 transition-colors" placeholder="••••">
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-espresso mb-1.5">ยืนยันรหัสผ่านใหม่</label>
+        <input type="password" id="confirmNewAdminPassInput" required class="w-full rounded-2xl border-petal bg-white px-4 py-3 text-center tracking-widest font-bold text-espresso border-2 focus:border-petal-deep focus:ring-0 transition-colors" placeholder="••••">
+      </div>
+      <div class="pt-2 flex gap-2">
+        <button type="button" onclick="closeChangeAdminPassModal()" class="flex-1 py-3.5 rounded-2xl text-sm font-bold text-espresso bg-white border border-petal hover:bg-petal-light transition-colors">ยกเลิก</button>
+        <button type="submit" id="btnSaveAdminPass" class="flex-1 py-3.5 rounded-2xl text-sm font-bold text-espresso bg-petal border-2 border-transparent hover:bg-petal-deep transition-colors shadow-cute">บันทึกรหัส</button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -2641,6 +2682,15 @@ function openChangePinModal() {
 }
 function closeChangePinModal() { animateModalClose('changePinModal'); }
 
+function openChangeAdminPassModal() {
+  if (!requireAdminAuth()) return;
+  document.getElementById('currentAdminPassInput').value = '';
+  document.getElementById('newAdminPassInput').value = '';
+  document.getElementById('confirmNewAdminPassInput').value = '';
+  animateModalOpen('changeAdminPassModal');
+}
+function closeChangeAdminPassModal() { animateModalClose('changeAdminPassModal'); }
+
 function handleSaveCustomPin(e) {
   e.preventDefault();
   const btn = document.getElementById('btnSavePin');
@@ -2667,6 +2717,35 @@ function handleSaveCustomPin(e) {
     saveSettingsValue('acc_pin', newPin);
     closeChangePinModal();
     showToast('เปลี่ยนรหัส PIN ระบบบัญชีเรียบร้อยแล้ว ✨');
+  });
+}
+
+function handleSaveAdminPass(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btnSaveAdminPass');
+  requireAdminAuthAction(btn, async () => {
+    const stMap = getFromLocal(STORAGE_KEY.SET, '{}');
+    const storedPass = stMap['admin_pass'] || '1234';
+    const currentPass = document.getElementById('currentAdminPassInput').value.trim();
+    const newPass = document.getElementById('newAdminPassInput').value.trim();
+    const confirmPass = document.getElementById('confirmNewAdminPassInput').value.trim();
+
+    if (currentPass !== storedPass) {
+      showToast('รหัสผ่านปัจจุบันไม่ถูกต้อง ❌');
+      return;
+    }
+    if (newPass !== confirmPass) {
+      showToast('รหัสผ่านใหม่ไม่ตรงกัน ❌');
+      return;
+    }
+    if (newPass.length < 4) {
+       showToast('รหัสผ่านต้องมีอย่างน้อย 4 ตัว ❌');
+       return;
+    }
+
+    saveSettingsValue('admin_pass', newPass);
+    closeChangeAdminPassModal();
+    showToast('เปลี่ยนรหัสผ่านเข้าสู่ระบบแอดมินเรียบร้อยแล้ว ✨');
   });
 }
 
@@ -3248,7 +3327,11 @@ async function handleAdminLogin(e) {
     // จำลองการโหลด
     await new Promise(r => setTimeout(r, 600));
 
+    const stMap = getFromLocal(STORAGE_KEY.SET, '{}');
+    const correctPass = stMap['admin_pass'] || '1234';
+
     if (!email || !pass) throw new Error('กรุณากรอกข้อมูลให้ครบถ้วน');
+    if (pass !== correctPass) throw new Error('รหัสผ่านไม่ถูกต้อง');
 
     currentAdmin = { email: email };
     
