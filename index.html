@@ -121,6 +121,7 @@ section{padding:48px 0}
 <div id="adm"></div>
 <div id="ts"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 const KEY='banphanta_v1';
 const $=id=>document.getElementById(id);
@@ -128,43 +129,41 @@ const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;'
 const v=id=>($(id)?$(id).value:'').trim();
 const ph=(t,a,b)=>'data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+a+'"/><stop offset="1" stop-color="'+b+'"/></linearGradient></defs><rect width="800" height="600" fill="url(#g)"/><text x="400" y="320" font-size="44" text-anchor="middle" fill="#fff" font-family="sans-serif">'+t+'</text></svg>');
 const LOGO='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 8 92 44H80v44H20V44H8z" fill="#14532d"/><rect x="40" y="58" width="20" height="30" fill="#bbf7d0"/><text x="50" y="52" font-size="20" font-weight="bold" text-anchor="middle" fill="#fff" font-family="sans-serif">BS</text></svg>');
-function def(){
- return{
- auth:{u:'admin',p:'1234'},
- s:{
-  nameTh:'บ้านพันตาเซอร์วิส',nameEn:'BANPHANTA SERVICE',
-  tagline:'ศูนย์รวมบริการประกันภัย และเอกสารแรงงานต่างด้าวแบบครบวงจร',
-  promo:'ง่าย ครบ จบในที่เดียว ให้คำปรึกษาฟรี',
-  logo:LOGO,cover:ph('ภาพหน้าสำนักงาน','#166534','#4ade80'),
-  aboutTitle:'About Us / เกี่ยวกับเรา',
-  aboutText:'บ้านพันตาเซอร์วิส คือศูนย์บริการที่ให้ความสะดวกครบวงจร ทั้งด้านประกันภัยรถยนต์ทุกประเภท และบริการแรงงานต่างด้าวอย่างถูกต้องตามกฎหมาย โดยทีมงานมืออาชีพ พร้อมดูแลตั้งแต่เริ่มต้นจนจบขั้นตอน ด้วยความรวดเร็ว โปร่งใส และบริการที่เข้าถึงง่าย',
-  aboutImg:ph('ทีมงาน','#14532d','#22c55e'),aboutImg2:ph('บรรยากาศการให้บริการ','#0f766e','#5eead4'),
-  whyTitle:'จุดเด่นของเรา',
-  whyIntro:'การติดตามงานและดูแลลูกค้าอย่างต่อเนื่อง บ้านพันตาเซอร์วิสให้ความสำคัญกับการดูแลลูกค้าในทุกขั้นตอน ไม่ได้มุ่งเน้นเพียงแค่การจัดหาประกันภัยหรือดำเนินเอกสารเท่านั้น แต่ยังมุ่งเน้นการบริการหลังการขายอย่างครบวงจร ดังนี้',
-  whyItems:'ติดตามงานและแจ้งความคืบหน้าอย่างสม่ำเสมอ เพื่อให้ลูกค้าได้รับข้อมูลที่ถูกต้องและสามารถวางแผนได้ล่วงหน้า\nประสานงานกับบริษัทประกันภัยหรือหน่วยงานที่เกี่ยวข้องแทนลูกค้า ทั้งในกรณีเคลมประกัน แจ้งอุบัติเหตุ หรือติดตามงานเอกสารต่าง ๆ\nแจ้งเตือนงานต่ออายุก่อนครบกำหนด เช่น ประกันภัย พ.ร.บ. ภาษี หรือเอกสารแรงงานต่างด้าว\nลดภาระของลูกค้า ไม่ต้องติดตามงานเอง เราเป็นผู้ประสานให้ครบทุกส่วน และรายงานผลให้ทราบอย่างมืออาชีพ',
-  whyQuote:'บริษัทของเรายึดถือหลัก ความใส่ใจ ความถูกต้อง และความรวดเร็ว เพื่อให้ลูกค้าได้รับบริการที่มั่นใจและไม่เกิดความกังวลตลอดการใช้บริการ',
-  fb:'บ้านพันตาเซอร์วิส',fbUrl:'https://www.facebook.com/',
-  phones:'038 657949|โทรศัพท์สำนักงาน\n086-8268919|คุณตาล\n09000841680|คุณมน\n0646284646|คุณเนย',
-  address:'13 หมู่ 1 ตำบลกร่ำ อำเภอแกลง จังหวัดระยอง 21190',
-  hours:'วันจันทร์–วันเสาร์ เวลา 08:00–17:00 น.',
-  lic1:'6001099735',lic2:'6604003291',
-  mapQ:'13 หมู่ 1 ตำบลกร่ำ อำเภอแกลง ระยอง 21190',
-  vis:{about:true,services:true,why:true,gallery:true,partners:true,contact:true}
- },
- services:[
-  {id:1,title:'ประกันภัยและภาษีรถยนต์',desc:'',img:ph('ประกันภัยรถยนต์','#14532d','#16a34a'),items:['รับทำประกันภัยรถยนต์ ชั้น 1, 2+, 3+, 3','ต่อ พ.ร.บ. และภาษีรถยนต์ทุกประเภท','บริการโอน แจ้งย้าย และจดทะเบียนรถใหม่','รับบริการยื่นต่ออายุประกอบการ TSM','ทำเอกสารถึงบ้าน และจัดส่งเอกสารฟรีในพื้นที่']},
-  {id:2,title:'บริการแรงงานต่างด้าว',desc:'',img:ph('แรงงานต่างด้าว','#1e3a5f','#3b82f6'),items:['รับดำเนินการเอกสารสำหรับแรงงานต่างชาติ เมียนมา ลาว กัมพูชา','งานต่ออายุ MOU','แจ้งเข้า–แจ้งออก','เปลี่ยนนายจ้าง','ดำเนินการเอกสาร Non-B','รายงานตัว 90 วัน','งานต่อวีซ่าท่องเที่ยว']},
-  {id:3,title:'ประกันชีวิต',desc:'ให้คำปรึกษา บริการวางแผน และจัดหาแบบประกันชีวิตที่ตอบโจทย์ความต้องการของลูกค้าอย่างแท้จริง โดยมุ่งเน้นแผนความคุ้มครองที่ครอบคลุม คุ้มค่า ทั้งแบบระยะสั้นและระยะยาว ประเภทแผนประกันชีวิตที่ให้บริการ:',img:ph('ประกันชีวิต','#065f46','#34d399'),items:['ประกันชีวิตแบบสะสมทรัพย์','ประกันชีวิตแบบคุ้มครองตลอดชีพ','ประกันชีวิตควบการลงทุน (Unit Link)','ประกันสุขภาพ / ค่ารักษาพยาบาล / โรคร้ายแรง','ประกันอุบัติเหตุส่วนบุคคล']}
- ],
- gallery:['ทีมงานและพนักงาน','การประชุมและอบรม','การให้บริการลูกค้า','การประสานงานกับบริษัทประกันภัย','การดำเนินเอกสารแรงงานต่างด้าว','กิจกรรมของบริษัท','สำนักงานและสถานที่ให้บริการ'].map((c,i)=>({id:10+i,cap:c,img:ph(c,['#14532d','#166534','#0f766e','#1e3a5f','#065f46','#15803d','#134e4a'][i],'#86efac')})),
- partners:['มิตรแท้ประกันภัย','กรุงเทพประกันภัย','เอ็ม เอส ไอ จี ประกันภัย','ทิพยประกันภัย','ไอโออิ กรุงเทพประกันภัย','คุ้มภัยโตเกียวมารีนประกันภัย','แอกซ่า ประกันภัย','แอลเอ็มจี ประกันภัย','เมืองไทยประกันภัย','ธนชาตประกันภัย','เออร์โก ประกันภัย'].map((n,i)=>({id:30+i,name:n,logo:''}))
- };
+const SB_URL='https://buvmxplxpzpbkedkihjc.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1dm14cGx4cHpwYmtlZGtpaGpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQzODE5NDcsImV4cCI6MjEwOTk1Nzk0N30.oIEtPcUfU0dpxdQintLJDPC8BRln5LshnByRfpEBMLQ';
+const db=supabase.createClient(SB_URL,SB_KEY);
+const NOPERM='บัญชีนี้ไม่มีสิทธิ์แก้ไขข้อมูล (ตรวจสอบว่าเพิ่มในตาราง admins แล้ว และรัน SQL ครบ)';
+const SMAP={nameTh:'name_th',nameEn:'name_en',tagline:'tagline',promo:'promo',logo:'logo_url',cover:'cover_url',aboutTitle:'about_title',aboutText:'about_text',aboutImg:'about_img_url',aboutImg2:'about_img2_url',whyTitle:'why_title',whyIntro:'why_intro',whyItems:'why_items',whyQuote:'why_quote',fb:'fb',fbUrl:'fb_url',phones:'phones',address:'address',hours:'hours',lic1:'lic1',lic2:'lic2',mapQ:'map_q',vis:'vis'};
+const DV={about:true,services:true,why:true,gallery:true,partners:true,contact:true};
+const TB={services:'services',gallery:'gallery_images',partners:'partners'};
+let D={s:{},services:[],gallery:[],partners:[]};
+for(const k in SMAP)D.s[k]='';
+D.s.vis=Object.assign({},DV);
+async function load(){
+ const r=await Promise.all([
+  db.from('site_settings').select('*').eq('id',1).maybeSingle(),
+  db.from('services').select('*').order('sort_order').order('id'),
+  db.from('gallery_images').select('*').order('sort_order').order('id'),
+  db.from('partners').select('*').order('sort_order').order('id')]);
+ const er=r.find(x=>x.error);
+ if(er){console.error(er.error);return false}
+ if(r[0].data)for(const k in SMAP)if(r[0].data[SMAP[k]]!=null)D.s[k]=r[0].data[SMAP[k]];
+ D.s.vis=Object.assign({},DV,D.s.vis);
+ D.services=r[1].data.map(x=>({id:x.id,so:x.sort_order,title:x.title,desc:x.description,img:x.img_url,items:x.items||[]}));
+ D.gallery=r[2].data.map(x=>({id:x.id,so:x.sort_order,cap:x.caption,img:x.img_url}));
+ D.partners=r[3].data.map(x=>({id:x.id,so:x.sort_order,name:x.name,logo:x.logo_url}));
+ return true;
 }
-let D;
-try{D=JSON.parse(localStorage.getItem(KEY))}catch(e){}
-if(!D||!D.s)D=def();
-D.s.vis=Object.assign({about:true,services:true,why:true,gallery:true,partners:true,contact:true},D.s.vis||{});
-function commit(){try{localStorage.setItem(KEY,JSON.stringify(D));return true}catch(e){alert('พื้นที่จัดเก็บเต็ม กรุณาลบรูปภาพบางส่วนหรือใช้รูปที่เล็กลง');return false}}
+async function up(d,folder){
+ if(!d||d.slice(0,5)!=='data:')return d||'';
+ const png=d.indexOf('data:image/png')===0;
+ const path=folder+'/'+Date.now()+'_'+Math.random().toString(36).slice(2,8)+(png?'.png':'.jpg');
+ const blob=await (await fetch(d)).blob();
+ const r=await db.storage.from('site-images').upload(path,blob,{contentType:png?'image/png':'image/jpeg',cacheControl:'31536000'});
+ if(r.error)throw r.error;
+ return db.storage.from('site-images').getPublicUrl(path).data.publicUrl;
+}
+function fail(e){console.error(e);alert('บันทึกไม่สำเร็จ: '+((e&&e.message)||e))}
 function toast(t){const e=$('ts');e.textContent=t;e.style.display='block';setTimeout(()=>e.style.display='none',2000)}
 
 /* ---------- PUBLIC SITE ---------- */
@@ -174,7 +173,7 @@ function render(){
  const L=[['home','หน้าแรก',1],['about','เกี่ยวกับเรา',vs.about],['services','บริการ',vs.services],['why','จุดเด่น',vs.why],['gallery','ผลงาน',vs.gallery],['partners','บริษัทในเครือ',vs.partners],['contact','ติดต่อเรา',vs.contact]];
  $('nv').innerHTML=L.filter(x=>x[2]).map(x=>'<a href="#'+x[0]+'" onclick="document.getElementById(\'nv\').classList.remove(\'o\')">'+x[1]+'</a>').join('');
  const ph2=s.phones.split('\n').map(x=>x.split('|')).filter(x=>x[0].trim());
- let h='<section class="hero" id="home"><div class="w hg"><div><img class="lg" src="'+esc(s.logo||LOGO)+'" alt="logo"><h1>'+esc(s.nameEn)+'</h1><h3>'+esc(s.nameTh)+'</h3><p>'+esc(s.tagline)+'</p><div class="bd">'+esc(s.promo)+'</div><div class="btns"><a class="b" href="#services">บริการของเรา</a><a class="b2" href="#contact">ติดต่อเรา</a></div></div><img class="cv" src="'+esc(s.cover)+'" alt="สำนักงาน"></div></section>';
+ let h='<section class="hero" id="home"><div class="w hg"><div><img class="lg" src="'+esc(s.logo||LOGO)+'" alt="logo"><h1>'+esc(s.nameEn)+'</h1><h3>'+esc(s.nameTh)+'</h3><p>'+esc(s.tagline)+'</p><div class="bd">'+esc(s.promo)+'</div><div class="btns"><a class="b" href="#services">บริการของเรา</a><a class="b2" href="#contact">ติดต่อเรา</a></div></div><img class="cv" src="'+esc(s.cover||ph('ภาพหน้าสำนักงาน','#166534','#4ade80'))+'" alt="สำนักงาน"></div></section>';
  if(vs.about)h+='<section id="about" class="rv"><div class="w ab"><div><h2 class="t" style="text-align:left">'+esc(s.aboutTitle)+'</h2><br><p>'+esc(s.aboutText)+'</p></div><div class="im">'+(s.aboutImg?'<img src="'+esc(s.aboutImg)+'" alt="">':'')+(s.aboutImg2?'<img src="'+esc(s.aboutImg2)+'" alt="">':'')+'</div></div></section>';
  if(vs.services)h+='<section id="services" class="alt rv"><div class="w"><h2 class="t">บริการของเรา</h2><p class="sub">Our Services</p><div class="sv">'+D.services.map(x=>'<div class="card">'+(x.img?'<img class="ci" src="'+esc(x.img)+'" alt="">':'')+'<div class="cb"><h3>'+esc(x.title)+'</h3>'+(x.desc?'<p style="margin-bottom:8px">'+esc(x.desc)+'</p>':'')+'<ul>'+x.items.map(i=>'<li>'+esc(i)+'</li>').join('')+'</ul></div></div>').join('')+'</div></div></section>';
  if(vs.why)h+='<section id="why" class="rv"><div class="w"><h2 class="t">'+esc(s.whyTitle)+'</h2><p class="sub">Why Choose Us</p><p style="font-size:18px;text-align:center;max-width:820px;margin:auto">'+esc(s.whyIntro)+'</p><div class="wy">'+s.whyItems.split('\n').filter(x=>x.trim()).map((x,i)=>'<div class="card"><div class="ic">'+(i+1)+'</div>'+esc(x)+'</div>').join('')+'</div><div class="qt">“'+esc(s.whyQuote)+'”</div></div></section>';
@@ -191,16 +190,26 @@ function openLb(i){const x=D.gallery[i];$('lbi').src=x.img;$('lbc').textContent=
 /* ---------- MODAL / LOGIN ---------- */
 function modal(h){$('mdc').innerHTML=h;$('md').style.display='flex'}
 function closeM(){$('md').style.display='none';$('mdc').innerHTML=''}
-function adminEntry(){if(sessionStorage.getItem('bp_admin')==='1')showAdm();else openLogin()}
+async function isAdmin(){
+ const u=(await db.auth.getUser()).data.user;if(!u)return false;
+ const r=await db.from('admins').select('user_id').eq('user_id',u.id).maybeSingle();
+ return !!r.data;
+}
+async function adminEntry(){
+ const r=await db.auth.getSession();
+ if(r.data.session&&await isAdmin())showAdm();else openLogin();
+}
 function openLogin(){
- modal('<h3>เข้าสู่ระบบผู้ดูแล</h3>'+fld('ชื่อผู้ใช้','l_u','')+'<div class="f"><label>รหัสผ่าน</label><input id="l_p" type="password"></div><div class="row"><button class="b" onclick="login()">เข้าสู่ระบบ</button><button class="b2" onclick="closeM()">ยกเลิก</button></div>');
+ modal('<h3>เข้าสู่ระบบผู้ดูแล</h3>'+fld('อีเมล','l_u','')+'<div class="f"><label>รหัสผ่าน</label><input id="l_p" type="password"></div><div class="row"><button class="b" onclick="login()">เข้าสู่ระบบ</button><button class="b2" onclick="closeM()">ยกเลิก</button></div>');
  $('l_p').onkeydown=e=>{if(e.key==='Enter')login()};
 }
-function login(){
- if(v('l_u')===D.auth.u&&$('l_p').value===D.auth.p){sessionStorage.setItem('bp_admin','1');closeM();showAdm()}
- else alert('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+async function login(){
+ const r=await db.auth.signInWithPassword({email:v('l_u'),password:$('l_p').value});
+ if(r.error){alert('อีเมลหรือรหัสผ่านไม่ถูกต้อง');return}
+ if(!await isAdmin()){await db.auth.signOut();alert('บัญชีนี้ไม่มีสิทธิ์ผู้ดูแลระบบ');return}
+ closeM();showAdm();
 }
-function logout(){sessionStorage.removeItem('bp_admin');closeAdm()}
+async function logout(){await db.auth.signOut();closeAdm()}
 function showAdm(){$('adm').style.display='block';document.body.style.overflow='hidden';adm()}
 function closeAdm(){$('adm').style.display='none';document.body.style.overflow='';render()}
 
@@ -238,7 +247,7 @@ function adm(t){
  else if(tab==='contact')c='<h3>จัดการข้อมูลติดต่อ</h3>'+fld('ชื่อ Facebook','s_fb',s.fb)+fld('ลิงก์ Facebook','s_fbUrl',s.fbUrl)+fld('เบอร์โทรศัพท์ (บรรทัดละ 1 เบอร์ รูปแบบ เบอร์|ชื่อ)','s_phones',s.phones,'ta')+fld('ที่อยู่บริษัท','s_address',s.address,'ta')+fld('เวลาทำการ','s_hours',s.hours)+fld('เลขที่ใบอนุญาตตัวแทนประกันชีวิต','s_lic1',s.lic1)+fld('เลขที่ใบอนุญาตนายหน้าประกันวินาศภัย','s_lic2',s.lic2)+fld('ตำแหน่งแผนที่ (ที่อยู่ หรือ พิกัด เช่น 12.7,101.6)','s_mapQ',s.mapQ)+sb('contact');
  else if(tab==='gen'){
   const nm={about:'เกี่ยวกับเรา',services:'บริการ',why:'จุดเด่น',gallery:'Gallery',partners:'บริษัทในเครือ',contact:'ติดต่อเรา'};
-  c='<h3>ข้อมูลทั่วไป</h3><div class="f"><label>เปิด/ซ่อนเนื้อหาแต่ละส่วน</label>'+Object.keys(nm).map(k=>'<label style="font-weight:400;display:block"><input type="checkbox" id="vi_'+k+'" '+(s.vis[k]?'checked':'')+'> แสดงส่วน '+nm[k]+'</label>').join('')+'</div>'+fld('ชื่อผู้ใช้ผู้ดูแล','a_u',D.auth.u)+fld('รหัสผ่านใหม่ (เว้นว่างถ้าไม่เปลี่ยน)','a_p','')+'<div class="row"><button class="b" onclick="saveGen()">💾 บันทึก</button><button class="b2" onclick="resetAll()">รีเซ็ตเป็นข้อมูลตัวอย่าง</button></div>';
+  c='<h3>ข้อมูลทั่วไป</h3><div class="f"><label>เปิด/ซ่อนเนื้อหาแต่ละส่วน</label>'+Object.keys(nm).map(k=>'<label style="font-weight:400;display:block"><input type="checkbox" id="vi_'+k+'" '+(s.vis[k]?'checked':'')+'> แสดงส่วน '+nm[k]+'</label>').join('')+'</div>'+'<div class="f"><label>รหัสผ่านใหม่ (เว้นว่างถ้าไม่เปลี่ยน อย่างน้อย 6 ตัวอักษร)</label><input id="a_p" type="password"></div><div class="row"><button class="b" onclick="saveGen()">💾 บันทึก</button></div>';
  } else {
   const k=tab,lab={services:'หมวดบริการ',gallery:'รูปภาพ',partners:'บริษัทในเครือ'}[k];
   c='<h3>จัดการ'+lab+'</h3><div class="row" style="margin-bottom:12px"><button class="b" onclick="edit(\''+k+'\',-1)">＋ เพิ่ม</button></div>'+(D[k].length?D[k].map((o,i)=>{
@@ -247,19 +256,37 @@ function adm(t){
  }
  $('adm').innerHTML='<div class="atop"><b>ระบบหลังบ้าน · '+esc(s.nameTh)+'</b><span><button onclick="closeAdm()">ดูหน้าเว็บ</button><button onclick="logout()">ออกจากระบบ</button></span></div><div class="abody"><nav>'+TABS.map(x=>'<button class="'+(x[0]===tab?'on':'')+'" onclick="adm(\''+x[0]+'\')">'+x[1]+'</button>').join('')+'</nav><main>'+c+'</main></div>';
 }
-function saveS(t){
- (TXT[t]||[]).forEach(k=>{D.s[k]=v('s_'+k)});
- (IMG[t]||[]).forEach(a=>{if(T['s_'+a[0]]!==undefined)D.s[a[0]]=T['s_'+a[0]]});
- if(t==='home'&&!D.s.nameTh){alert('กรุณากรอกชื่อบริษัท');return}
- if(commit()){render();toast('บันทึกแล้ว')}
+async function saveSettings(o){
+ const r=await db.from('site_settings').update(o).eq('id',1).select();
+ if(r.error)throw r.error;
+ if(!r.data.length)throw new Error(NOPERM);
+ for(const k in SMAP)if(SMAP[k] in o)D.s[k]=o[SMAP[k]];
+ D.s.vis=Object.assign({},DV,D.s.vis);
+ render();
 }
-function saveGen(){
- Object.keys(D.s.vis).forEach(k=>{D.s.vis[k]=$('vi_'+k).checked});
- if(v('a_u'))D.auth.u=v('a_u');
- if($('a_p').value)D.auth.p=$('a_p').value;
- if(commit()){render();adm();toast('บันทึกแล้ว')}
+async function saveS(t){
+ const o={};
+ (TXT[t]||[]).forEach(k=>{o[SMAP[k]]=v('s_'+k)});
+ if(t==='home'&&!o.name_th){alert('กรุณากรอกชื่อบริษัท');return}
+ try{
+  toast('กำลังบันทึก...');
+  for(const a of (IMG[t]||[])){const d=T['s_'+a[0]];if(d!==undefined)o[SMAP[a[0]]]=await up(d,'site')}
+  await saveSettings(o);toast('บันทึกแล้ว');
+ }catch(e){fail(e)}
 }
-function resetAll(){if(confirm('ต้องการรีเซ็ตข้อมูลทั้งหมดเป็นข้อมูลตัวอย่างหรือไม่?')){const a=D.auth;D=def();D.auth=a;commit();render();adm();toast('รีเซ็ตแล้ว')}}
+async function saveGen(){
+ try{
+  toast('กำลังบันทึก...');
+  const vis={};Object.keys(DV).forEach(k=>{vis[k]=$('vi_'+k).checked});
+  await saveSettings({vis});
+  const pw=$('a_p').value;
+  if(pw){
+   if(pw.length<6){alert('รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร');return}
+   const r=await db.auth.updateUser({password:pw});if(r.error)throw r.error;
+  }
+  adm();toast('บันทึกแล้ว');
+ }catch(e){fail(e)}
+}
 const CF={
  services:{blank:{title:'',desc:'',img:'',items:[]},t:'หมวดบริการ',
   f:o=>fld('ชื่อหมวดบริการ','e_title',o.title)+fld('คำอธิบาย (ไม่บังคับ)','e_desc',o.desc,'ta')+fld('รายการบริการ (บรรทัดละ 1 รายการ)','e_items',o.items.join('\n'),'ta')+imgf('รูปประกอบ','e_img',o.img,900),
@@ -275,18 +302,49 @@ function edit(k,i){
  T={};const c=CF[k],o=i<0?c.blank:D[k][i];
  modal('<h3>'+(i<0?'เพิ่ม':'แก้ไข')+c.t+'</h3>'+c.f(o)+'<div class="row"><button class="b" onclick="saveE(\''+k+'\','+i+')">💾 บันทึก</button><button class="b2" onclick="closeM()">ยกเลิก</button></div>');
 }
-function saveE(k,i){
+const toRow=(k,o)=>k==='services'?{title:o.title,description:o.desc,img_url:o.img,items:o.items}:k==='gallery'?{caption:o.cap,img_url:o.img}:{name:o.name,logo_url:o.logo};
+async function saveE(k,i){
  const c=CF[k],o=c.g();
  if(!c.ok(o)){alert(k==='gallery'?'กรุณาเลือกรูปภาพ':'กรุณากรอกชื่อ');return}
- const bak=JSON.stringify(D[k]);
- if(i<0){o.id=Date.now();D[k].push(o)}else D[k][i]=Object.assign({},D[k][i],o);
- if(commit()){closeM();adm();toast('บันทึกแล้ว')}else D[k]=JSON.parse(bak);
+ try{
+  toast('กำลังบันทึก...');
+  const f=k==='partners'?'logo':'img';
+  o[f]=await up(o[f],k);
+  const row=toRow(k,o);
+  if(i<0){
+   row.sort_order=D[k].reduce((m,x)=>Math.max(m,x.so||0),0)+1;
+   const r=await db.from(TB[k]).insert(row).select();if(r.error)throw r.error;
+  }else{
+   const r=await db.from(TB[k]).update(row).eq('id',D[k][i].id).select();
+   if(r.error)throw r.error;if(!r.data.length)throw new Error(NOPERM);
+  }
+  await load();closeM();adm();render();toast('บันทึกแล้ว');
+ }catch(e){fail(e)}
 }
-function mv(k,i,d){const j=i+d;if(j<0||j>=D[k].length)return;const a=D[k];[a[i],a[j]]=[a[j],a[i]];commit();adm()}
-function del(k,i){if(confirm('ต้องการลบรายการนี้หรือไม่?')){D[k].splice(i,1);commit();adm()}}
-
-render();
-if(location.hash==='#admin')adminEntry();
+async function mv(k,i,d){
+ const j=i+d,a=D[k];if(j<0||j>=a.length)return;
+ [a[i],a[j]]=[a[j],a[i]];
+ try{
+  const rs=await Promise.all(a.map((x,n)=>x.so!==n+1?db.from(TB[k]).update({sort_order:n+1}).eq('id',x.id).select():null).filter(Boolean));
+  for(const r of rs){if(r.error)throw r.error;if(!r.data.length)throw new Error(NOPERM)}
+  await load();adm();render();
+ }catch(e){fail(e);await load();adm()}
+}
+async function del(k,i){
+ if(!confirm('ต้องการลบรายการนี้หรือไม่?'))return;
+ try{
+  const r=await db.from(TB[k]).delete().eq('id',D[k][i].id).select();
+  if(r.error)throw r.error;if(!r.data.length)throw new Error(NOPERM);
+  await load();adm();render();
+ }catch(e){fail(e)}
+}
+$('pub').innerHTML='<p style="padding:100px 20px;text-align:center;color:#64748b">กำลังโหลดข้อมูล...</p>';
+(async()=>{
+ const ok=await load();
+ if(!ok)$('pub').innerHTML='<p style="padding:100px 20px;text-align:center">โหลดข้อมูลไม่สำเร็จ กรุณารีเฟรชหน้านี้ (ตรวจสอบว่ารัน SQL ใน Supabase แล้ว)</p>';
+ else render();
+ if(location.hash==='#admin')adminEntry();
+})();
 </script>
 </body>
 </html>
