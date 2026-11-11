@@ -247,7 +247,7 @@ function adm(t){
  else if(tab==='contact')c='<h3>จัดการข้อมูลติดต่อ</h3>'+fld('ชื่อ Facebook','s_fb',s.fb)+fld('ลิงก์ Facebook','s_fbUrl',s.fbUrl)+fld('เบอร์โทรศัพท์ (บรรทัดละ 1 เบอร์ รูปแบบ เบอร์|ชื่อ)','s_phones',s.phones,'ta')+fld('ที่อยู่บริษัท','s_address',s.address,'ta')+fld('เวลาทำการ','s_hours',s.hours)+fld('เลขที่ใบอนุญาตตัวแทนประกันชีวิต','s_lic1',s.lic1)+fld('เลขที่ใบอนุญาตนายหน้าประกันวินาศภัย','s_lic2',s.lic2)+fld('ตำแหน่งแผนที่ (ที่อยู่ หรือ พิกัด เช่น 12.7,101.6)','s_mapQ',s.mapQ)+sb('contact');
  else if(tab==='gen'){
   const nm={about:'เกี่ยวกับเรา',services:'บริการ',why:'จุดเด่น',gallery:'Gallery',partners:'บริษัทในเครือ',contact:'ติดต่อเรา'};
-  c='<h3>ข้อมูลทั่วไป</h3><div class="f"><label>เปิด/ซ่อนเนื้อหาแต่ละส่วน</label>'+Object.keys(nm).map(k=>'<label style="font-weight:400;display:block"><input type="checkbox" id="vi_'+k+'" '+(s.vis[k]?'checked':'')+'> แสดงส่วน '+nm[k]+'</label>').join('')+'</div>'+'<div class="f"><label>รหัสผ่านใหม่ (เว้นว่างถ้าไม่เปลี่ยน อย่างน้อย 6 ตัวอักษร)</label><input id="a_p" type="password"></div><div class="row"><button class="b" onclick="saveGen()">💾 บันทึก</button></div>';
+  c='<h3>ข้อมูลทั่วไป</h3><div class="f"><label>เปิด/ซ่อนเนื้อหาแต่ละส่วน</label>'+Object.keys(nm).map(k=>'<label style="font-weight:400;display:block"><input type="checkbox" id="vi_'+k+'" '+(s.vis[k]?'checked':'')+'> แสดงส่วน '+nm[k]+'</label>').join('')+'</div>'+'<div class="f"><label>รหัสผ่านใหม่ (เว้นว่างถ้าไม่เปลี่ยน อย่างน้อย 6 ตัวอักษร)</label><input id="a_p" type="password"></div><div class="row"><button class="b" onclick="saveGen()">💾 บันทึก</button>'+(localStorage.getItem('banphanta_v1')?'<button class="b2" onclick="importOld()">นำเข้าข้อมูลเดิมจากเครื่องนี้</button>':'')+'</div>';
  } else {
   const k=tab,lab={services:'หมวดบริการ',gallery:'รูปภาพ',partners:'บริษัทในเครือ'}[k];
   c='<h3>จัดการ'+lab+'</h3><div class="row" style="margin-bottom:12px"><button class="b" onclick="edit(\''+k+'\',-1)">＋ เพิ่ม</button></div>'+(D[k].length?D[k].map((o,i)=>{
@@ -336,6 +336,32 @@ async function del(k,i){
   const r=await db.from(TB[k]).delete().eq('id',D[k][i].id).select();
   if(r.error)throw r.error;if(!r.data.length)throw new Error(NOPERM);
   await load();adm();render();
+ }catch(e){fail(e)}
+}
+async function importOld(){
+ let o;try{o=JSON.parse(localStorage.getItem('banphanta_v1'))}catch(e){}
+ if(!o||!o.s){alert('ไม่พบข้อมูลเดิมในเครื่องนี้');return}
+ if(!confirm('นำเข้าข้อมูลเดิมจากเครื่องนี้ขึ้นระบบ?\nบริการ Gallery และบริษัทในเครือที่อยู่บนระบบตอนนี้จะถูกแทนที่ด้วยข้อมูลเดิม')) return;
+ try{
+  toast('กำลังนำเข้า อาจใช้เวลาสักครู่...');
+  const img=async(d,f)=>(!d||d.indexOf('data:image/svg')===0)?'':await up(d,f);
+  const row={};
+  for(const k in SMAP){
+   if(k==='vis'){row.vis=Object.assign({},DV,o.s.vis);continue}
+   if(o.s[k]==null)continue;
+   row[SMAP[k]]=['logo','cover','aboutImg','aboutImg2'].indexOf(k)>=0?await img(o.s[k],'site'):o.s[k];
+  }
+  const sv=[],gl=[],pt=[];
+  for(const x of (o.services||[]))sv.push({title:x.title,description:x.desc||'',img_url:await img(x.img,'services'),items:x.items||[],sort_order:sv.length+1});
+  for(const x of (o.gallery||[])){const u=await img(x.img,'gallery');if(u)gl.push({caption:x.cap||'',img_url:u,sort_order:gl.length+1})}
+  for(const x of (o.partners||[]))pt.push({name:x.name,logo_url:await img(x.logo,'partners'),sort_order:pt.length+1});
+  await saveSettings(row);
+  const sets=[['services',sv],['gallery_images',gl],['partners',pt]];
+  for(const t of sets){
+   const d=await db.from(t[0]).delete().gt('id',0);if(d.error)throw d.error;
+   if(t[1].length){const r=await db.from(t[0]).insert(t[1]).select();if(r.error)throw r.error}
+  }
+  await load();render();adm();toast('นำเข้าแล้ว');
  }catch(e){fail(e)}
 }
 $('pub').innerHTML='<p style="padding:100px 20px;text-align:center;color:#64748b">กำลังโหลดข้อมูล...</p>';
